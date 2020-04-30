@@ -2,7 +2,7 @@
 
 * [Linux ELF 文件签名保护解决方案](README.md)
 * [背景](background.md)
-* [运行环境与依赖](yun-hang-huan-jing-yu-yi-lai.md)
+* [运行环境与依赖](environment-and-dependencies.md)
 
 ## 第一部分 - 内核 ELF 签名验证机制 <a id="group-1-kernel-signature-verification"></a>
 
