@@ -1,6 +1,7 @@
 # Table of contents
 
 * [Linux ELF 文件签名保护解决方案](README.md)
+* [简介](introduction.md)
 * [背景](background.md)
 * [运行环境与依赖](environment-and-dependencies.md)
 
