@@ -115,9 +115,9 @@ int search_binary_handler(struct linux_binprm *bprm)
 
 内核是在 **初始化阶段** 逐步构造二进制格式处理函数的 **链表** 的。每个格式的处理函数被挂上链表的时机和方式由如下因素决定：
 
-1. 每个二进制格式处理模块的初始化等级
-2. 每个二进制格式处理模块被编译的顺序
-3. 每个二进制格式处理模块被挂上链表的方式 \(在链表头部插入 / 在链表尾部插入\)
+1. 二进制格式处理模块的初始化等级
+2. 二进制格式处理模块被编译的顺序
+3. 二进制格式处理模块被挂上链表的方式 \(在链表头部插入 / 在链表尾部插入\)
 
 #### 内核初始化等级
 
@@ -150,7 +150,7 @@ int search_binary_handler(struct linux_binprm *bprm)
 #define late_initcall_sync(fn)		__define_initcall(fn, 7s)
 ```
 
-其中，等级越高 \(优先级数值越小\) 的模块越先被初始化。而在每个二进制格式处理模块中，都会声明当前模块在哪个等级上被初始化。以 ELF 格式为例：
+其中，等级越高 \(优先级数值越小\) 的模块越先被初始化。而在每个二进制格式处理模块中，都会声明当前模块在哪个等级上被初始化。以 ELF 格式处理模块 \(binfmt\_elf\) 为例：
 
 ```c
 core_initcall(init_elf_binfmt);
@@ -200,4 +200,14 @@ obj-$(CONFIG_BINFMT_FLAT)	+= binfmt_flat.o
 
 1. 判断该二进制文件是否符合 ELF 格式
 2. 如果符合 ELF 格式，则取出二进制文件中的数字签名，并进行验证
+
+## 1.6 参考资料
+
+[How programs get run](https://lwn.net/Articles/630727/)
+
+[How does kernel get an executable binary file running under linux?](https://stackoverflow.com/questions/8352535/how-does-kernel-get-an-executable-binary-file-running-under-linux)
+
+[Playing with Binary Formats](https://www.linuxjournal.com/article/2568)
+
+[Kernel Support for miscellaneous Binary Formats \(binfmt\_misc\)](https://www.kernel.org/doc/html/latest/admin-guide/binfmt-misc.html)
 
