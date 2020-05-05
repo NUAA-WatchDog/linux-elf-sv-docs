@@ -26,6 +26,7 @@ $ cat /proc/keys
 
 此外，在编译内核时通过配置 `CONFIG_SYSTEM_TRUSTED_KEYS` 引用 [PEM](https://en.wikipedia.org/wiki/Privacy-Enhanced_Mail) 格式的证书文件，内核允许在系统密钥环上添加额外的 [X.509](https://en.wikipedia.org/wiki/X.509) 公钥证书。关于该配置的说明如下：
 
+{% code title="certs/Kconfig" %}
 ```text
 config SYSTEM_TRUSTED_KEYS
 	string "Additional X.509 keys for default system keyring"
@@ -40,6 +41,7 @@ config SYSTEM_TRUSTED_KEYS
 	  form of DER-encoded *.x509 files in the top-level build directory,
 	  those are no longer used. You will need to set this option instead.
 ```
+{% endcode %}
 
 我们为 ELF 的签名与验证生成了一对符合 X.509 标准的 [RSA](https://en.wikipedia.org/wiki/RSA_%28cryptosystem%29) 公私钥，并通过上述机制，将公钥证书编译到了内核的系统密钥环上。这样，在 [binfmt\_elf\_signature\_verification](chapter-1-binary-execution-procedure.md#15-dui-elf-wen-jian-jin-hang-qian-ming-yan-zheng-de-si-lu) 模块中，可以通过使用系统密钥环，对 ELF 文件中的签名 section 进行验证。
 
@@ -47,12 +49,15 @@ config SYSTEM_TRUSTED_KEYS
 
 首先，我们对 Linux 内核中已有的 [内核模块签名](https://www.kernel.org/doc/html/v4.15/admin-guide/module-signing.html) 验证机制的代码进行了分析。在内核源代码目录 `certs/system_keyring.c` 中，定义了内核内置的受信证书：
 
+{% code title="certs/system\_keyring.c" %}
 ```c
 static struct key *builtin_trusted_keys;
 ```
+{% endcode %}
 
 但由于这个变量没有被声明为 `extern`，因此无法在其它内核代码中直接引用这个变量。但是在这个源文件中，通过暴露 `verify_pkcs7_signature()` 函数，使得其它内核代码能够通过这个函数，间接使用内置密钥环的签名验证功能：
 
+{% code title="certs/system\_keyring.c" %}
 ```c
 /**
  * verify_pkcs7_signature - Verify a PKCS#7-based signature on system data.
@@ -77,6 +82,7 @@ int verify_pkcs7_signature(const void *data, size_t len,
 {
 ...
 ```
+{% endcode %}
 
 在内核代码中，通过 `#include <linux/verification.h>` 使用该函数时，输入 **签名数据** 与 **被签名数据** 的 **缓冲区地址** 和 **数据长度**，就能够使用内置密钥完成签名认证。因此，[binfmt\_elf\_signature\_verifiaction](chapter-1-binary-execution-procedure.md#15-dui-elf-wen-jian-jin-hang-qian-ming-yan-zheng-de-si-lu) 只要能够从 ELF 文件中正确提取 [PKCS \#7](https://tools.ietf.org/html/rfc2315) 格式的签名数据及其相对应的被签名数据，就可以通过这个函数验证签名是否正确。
 

@@ -24,6 +24,7 @@ description: >-
 
 为了识别二进制文件的格式，内核会将二进制文件的前 128 个字节读到如下的结构体中：
 
+{% code title="include/linux/binfmts.h" %}
 ```c
 #define CORENAME_MAX_SIZE 128
 
@@ -35,6 +36,7 @@ struct linux_binprm {
     /* ... */
 } __randomize_layout;
 ```
+{% endcode %}
 
 根据 magic value \(每个格式特有的字节序列\) 等信息，判断出二进制文件的格式。比如：
 
@@ -57,12 +59,17 @@ struct linux_binprm {
 * `binfmt_script` - 脚本文件格式，用于执行 shell、Perl 等格式的脚本
 
 {% hint style="info" %}
-编译内核前，根据目标硬件平台进行编译配置后，有些格式将不会被编译进内核。
+编译内核前，根据目标硬件平台进行编译配置后，有些二进制文件格式的处理模块将不会被编译进内核主映像。
 {% endhint %}
 
 其中，每一种格式对应的处理程序，在编码上都以模块的形式实现 \(虽然编译后并不一定是模块\)，并且都用类似面向对象中多态的形式实现了一个统一的接口：
 
+{% code title="include/linux/binfmts.h" %}
 ```c
+/*
+ * This structure defines the functions that are used to load the binary formats that
+ * linux accepts.
+ */
 struct linux_binfmt {
     struct list_head lh;
     struct module *module;
@@ -72,6 +79,7 @@ struct linux_binfmt {
     unsigned long min_coredump;    /* minimal dump size */
 } __randomize_layout;
 ```
+{% endcode %}
 
 其中，关注这三个函数指针：
 
@@ -81,6 +89,7 @@ struct linux_binfmt {
 
 在操作系统初始化阶段，这些二进制格式的处理函数被依次添加到了一个链表上。当执行一个二进制文件时，内核实现将其头 128 字节以及相关信息读入 `struct linux_binprm` 结构体，然后依次遍历链表上的每一个 `struct linux_binfmt` 结构体，将 `struct linux_binprm` 作为参数，依次调用每种二进制文件格式对应的 `*load_binary` 函数。这一过程在 `fs/exec.c` 的如下函数中实现：
 
+{% code title="fs/exec.c" %}
 ```c
 int search_binary_handler(struct linux_binprm *bprm)
 {
@@ -98,6 +107,7 @@ int search_binary_handler(struct linux_binprm *bprm)
     return retval;
 }
 ```
+{% endcode %}
 
 在这个函数中，可能会有以下三种情况出现：
 
@@ -123,6 +133,7 @@ int search_binary_handler(struct linux_binprm *bprm)
 
 在内核初始化阶段，内核为其各个模块的初始化划分了优先级：
 
+{% code title="include/linux/init.h" %}
 ```c
 /*
  * A "pure" initcall has no dependencies on anything else, and purely
@@ -149,14 +160,17 @@ int search_binary_handler(struct linux_binprm *bprm)
 #define late_initcall(fn)		__define_initcall(fn, 7)
 #define late_initcall_sync(fn)		__define_initcall(fn, 7s)
 ```
+{% endcode %}
 
 其中，等级越高 \(优先级数值越小\) 的模块越先被初始化。而在每个二进制格式处理模块中，都会声明当前模块在哪个等级上被初始化。以 ELF 格式处理模块 \(binfmt\_elf\) 为例：
 
+{% code title="fs/binfmt\_elf.c" %}
 ```c
 core_initcall(init_elf_binfmt);
 module_exit(exit_elf_binfmt);
 MODULE_LICENSE("GPL");
 ```
+{% endcode %}
 
 以上代码表示 ELF 格式的处理模块会在 `core_initcall` \(1 号优先级\) 的等级上，通过调用 `init_elf_binfmt()` 函数完成初始化。
 
@@ -164,6 +178,7 @@ MODULE_LICENSE("GPL");
 
 模块编译的相对顺序体现在 Makefile 文件中，位于前面的模块先被编译。以 `fs/Makefile` 为例：
 
+{% code title="fs/Makefile" %}
 ```text
 obj-$(CONFIG_BINFMT_AOUT)	+= binfmt_aout.o
 obj-$(CONFIG_BINFMT_EM86)	+= binfmt_em86.o
@@ -174,6 +189,7 @@ obj-$(CONFIG_COMPAT_BINFMT_ELF)	+= compat_binfmt_elf.o
 obj-$(CONFIG_BINFMT_ELF_FDPIC)	+= binfmt_elf_fdpic.o
 obj-$(CONFIG_BINFMT_FLAT)	+= binfmt_flat.o
 ```
+{% endcode %}
 
 在同一个初始化等级上，先被编译的模块会先被初始化。比如，假设上述所有模块都是由 `core_initcall()` 等级进行初始化，那么模块就按从上到下的顺序依次初始化。
 
@@ -184,7 +200,7 @@ obj-$(CONFIG_BINFMT_FLAT)	+= binfmt_flat.o
 * `register_binfmt(&xxx_format)`
 * `insert_binfmt(&xxx_format)`
 
-两种注册方式的差别是，`register_binfmt` 将处理模块注册在 **链表尾部**，而 `insert_binfmt` 将处理模块注册在 **链表首部**。
+两种注册方式的差别是，`register_binfmt` 将处理模块注册在 **链表尾部**，而 `insert_binfmt` 将处理模块注册在 **链表头部**。
 
 ## 1.5 对 ELF 文件进行签名验证的思路
 
