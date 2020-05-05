@@ -22,3 +22,7 @@
 * [Chapter 7 - 编译内核](group-3-usage/chapter-7-kernel-compilation.md)
 * [Chapter 8 - ELF 签名](group-3-usage/chapter-8-elf-sign.md)
 
+## 第四部分 - 评估与测试 <a id="group-4-evaluation-and-testing"></a>
+
+* [Chapter 9 - 性能开销评估](group-4-evaluation-and-testing/chapter-9-performance-overhead-evaluation.md)
+
