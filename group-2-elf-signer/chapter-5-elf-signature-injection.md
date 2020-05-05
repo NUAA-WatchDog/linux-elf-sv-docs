@@ -35,6 +35,8 @@ description: >-
 
 签名程序会在被签名 section 名称的基础上加上 `_sig` 后缀，成为被签名 section 对应的签名数据 section。如，对于保存 ELF 程序指令的 `.text` section，签名程序会将签名数据作为一个名为 `.text_sig` 的 section 附加到 ELF 文件中。
 
+如果在解析 ELF section 的过程中发现已经存在名称以 `_sig` 为后缀的 section，则签名程序会将这些 section 从 ELF 文件中删除，以防止后续注入签名 section 时发生重名错误。
+
 在签名期间，签名程序会产生一些临时文件，用于保存被签名的若干个 section 对应的签名数据；在签名完成之后，这些临时文件将会被清除。
 
 对于一个名为 `elf`的 ELF 文件，在签名成功后，签名程序会保留未被签名的旧版本 ELF 文件 `elf.old` 作为备份，而注入签名后的新 ELF 文件将会被命名为原先的 `elf`。
@@ -46,4 +48,6 @@ description: >-
 [Adding section to ELF file](https://stackoverflow.com/questions/1088128/adding-section-to-elf-file)
 
 [ELF format manipulation](https://stackoverflow.com/questions/7601344/elf-format-manipulation)
+
+[How to remove a specific ELF section, without stripping other symbols?](https://stackoverflow.com/questions/31453859/how-to-remove-a-specific-elf-section-without-stripping-other-symbols)
 
