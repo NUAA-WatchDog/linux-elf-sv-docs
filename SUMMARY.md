@@ -9,7 +9,7 @@
 
 * [Chapter 1 - 二进制文件执行过程](group-1-kernel-signature-verification/chapter-1-binary-execution-procedure.md)
 * [Chapter 2 - ELF 文件格式分析](group-1-kernel-signature-verification/chapter-2-elf-format-analysis.md)
-* [Chapter 3 - 内核保留密钥服务](group-1-kernel-signature-verification/chapter-3-kernel-trusted-keys.md)
+* [Chapter 3 - 内核密钥保留服务](group-1-kernel-signature-verification/chapter-3-kernel-trusted-keys.md)
 
 ## 第二部分 - ELF 文件签名程序 <a id="group-2-elf-signer"></a>
 

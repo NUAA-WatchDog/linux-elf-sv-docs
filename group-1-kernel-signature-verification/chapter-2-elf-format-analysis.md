@@ -58,5 +58,9 @@ Section header table 中并不存储每个 section 的名称。所有 section �
 
 在找到这两个相互对应的 section 之后，再根据 section header table 中指示的这两个 section 在文件中的位置与长度，将这两个 section 的具体数据载入内存。
 
-最终，对这一对 section 数据进行签名验证。如果所有的签名验证都正确，那么 binfmt\_elf\_signature\_verification 模块会返回 `-ENOEXEC` 错误码，使内核调用真正的 ELF 处理模块完成相应的工作；如果签名验证错误，那么模块返回其它错误码，内核将无法继续执行这个 ELF 文件。
+最终，对这一对 section 数据进行签名验证。如果所有的签名验证都正确，那么 [binfmt\_elf\_signature\_verification](chapter-1-binary-execution-procedure.md#15-dui-elf-wen-jian-jin-hang-qian-ming-yan-zheng-de-si-lu) 模块会返回 `-ENOEXEC` 错误码，使内核调用真正的 ELF 处理模块完成相应的工作；如果签名验证错误，那么模块返回其它错误码，内核将无法继续执行这个 ELF 文件。
+
+## 2.4 参考资料
+
+[Executable and Linking Format \(ELF\) Specification](http://www.skyfree.org/linux/references/ELF_Format.pdf)
 
