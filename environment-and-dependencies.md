@@ -2,11 +2,11 @@
 
 ### Linux 发行版
 
-当前解决方案确定可运行于 Deepin、Ubuntu 等基于 Debian 的 Linux 操作系统发行版。
+当前解决方案确定可运行于 [Deepin](https://www.deepin.org/)、[UOS](https://www.chinauos.com/home)、[Ubuntu](https://ubuntu.com/) 等基于 Debian 的 Linux 操作系统发行版。
 
 ### Linux​ 内核版本
 
-当前解决方案使用 Linux kernel 4.15.0 release。但由于没有修改任何内核主线代码，因此可以快速扩展到更新版本的 Linux kernel 中。
+当前解决方案使用 Linux kernel 4.15.0 release。但由于没有修改任何内核主线代码，因此可以快速扩展到更高版本的 Linux kernel 中。
 
 ### 依赖软件包
 
