@@ -24,5 +24,6 @@
 
 ## 第四部分 - 评估与测试 <a id="group-4-evaluation-and-testing"></a>
 
-* [Chapter 9 - 性能开销评估](group-4-evaluation-and-testing/chapter-9-performance-overhead-evaluation.md)
+* [Chapter 9 - 签名验证机制开销评估](group-4-evaluation-and-testing/chapter-9-kernel-performance-overhead-evaluation.md)
+* [Chapter 10 - ELF 签名开销评估](group-4-evaluation-and-testing/chapter-10-elf-signature-overhead-evaluation.md)
 
