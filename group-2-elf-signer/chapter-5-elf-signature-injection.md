@@ -18,7 +18,7 @@ description: >-
 
 根据 ELF 文件的格式，如下图所示：
 
-![](../.gitbook/assets/elf-new-section.png)
+![&#x5728; ELF &#x6587;&#x4EF6;&#x4E2D;&#x6CE8;&#x5165;&#x4E00;&#x4E2A;&#x65B0;&#x7684; section](../.gitbook/assets/elf-new-section.png)
 
 加入一个新的 section 可能涉及到对 ELF 多个部分的修改：
 
