@@ -9,13 +9,13 @@ description: 使用 ELF 文件签名程序，对一个未被签名的 ELF 文件
 首先，需要安装签名程序依赖的库。基于 Debian 系列的 Linux 发行版可以使用 **APT** \(Advanced Package Tool\) 工具轻易安装这些依赖：
 
 ```bash
-$ sudo apt install libssl-dev libelf-dev binutils openssl
+$ sudo apt install libssl-dev
 ```
 
-在 GitHub 上克隆 [ELF 文件签名程序](https://github.com/mrdrivingduck/linux-elf-binary-signer) 的代码仓库，并通过 `make` 命令自动编译、构建签名程序，并对签名程序进行签名。
+在 GitHub 上克隆 [ELF 文件签名程序](https://github.com/mrdrivingduck/linux-elf-binary-signer) 的代码仓库，通过 `make` 命令自动编译、构建签名程序，并对签名程序进行签名。
 
 {% hint style="info" %}
-由于自行构建得到的 `elf-sign` 也是一个 ELF 程序，因此，在它可以用于对其它 ELF 文件进行签名之前，其自身也必须被签名，否则内核将拒绝执行这个 ELF 程序。在仓库中，我们提供了一个已经被仓库中的测试密钥 \(`certs/kernel_key.pem`\) 签名后的 `elf-sign.signed`，并用这个已有的签名程序对我们自行构建的 `elf-sign` 进行签名。
+由于自行构建得到的 `elf-sign` 也是一个 ELF 程序，因此，在它可以用于对其它 ELF 文件进行签名之前，其自身也必须被签名，否则内核将拒绝执行这个 ELF 程序。在仓库中，我们提供了一个已经被仓库中的测试密钥 \(`certs/kernel_key.pem`\) 签名后的 `elf-sign.signed`，并用这个已有的签名程序对 `make` 命令构建的 `elf-sign` 进行签名。
 
 如果您自行生成了私钥与公钥证书，那么您可能需要在一个 **没有 ELF 签名验证机制** 且 **确认安全** 的内核上，对自行构建得到的 `elf-sign` 进行自签名。然后，这个被签名后的签名程序可以使用在具有 ELF 签名验证机制的内核上。
 {% endhint %}
@@ -71,13 +71,14 @@ Contents of section .text_sig:
 
 ```bash
 $ ./elf-sign sign-target sha256 certs/kernel_key.pem certs/kernel_key.pem
-sign-target: 64-bit ELF object
-29 sections detected.
-Section 0014 .text
-Code segment length: 418
-Buffer size: 418
-Writing signature to: .text_sig
-Removing .text_sig
+ --- 64-bit ELF file, version 1 (CURRENT).
+ --- Little endian.
+ --- 29 sections detected.
+ --- Section 0014 [.text] detected.
+ --- Length of section [.text]: 418
+ --- Signature size of [.text]: 465
+ --- Writing signature to file: .text_sig
+ --- Removing temp signature file: .text_sig
 ```
 
 `elf-sign` 的参数含义：
