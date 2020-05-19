@@ -8,31 +8,32 @@ description: >-
 
 ## 5.1 签名数据存放位置
 
-想要将签名数据附在原有的 ELF 文件中，且不破坏 ELF 的结构使其能够在没有签名验证机制的 OS 上也能运行，要么在 ELF 文件的尾部追加签名，要么在 ELF 文件的中间以符合 ELF 规范的方式添加若干段签名数据。
+想要将签名数据附在原有的 ELF 文件中，且不破坏 [ELF 的结构](../group-1-kernel-signature-verification/chapter-2-elf-format-analysis.md)，使其能够在没有签名验证机制的 OS 上也能运行，要么在 ELF 文件的尾部追加签名，要么在 ELF 文件的中间以符合 ELF 规范的方式添加若干段签名数据。
 
 在尾部追加签名的方式比较简单，但从文件整体来看，该文件已经不是一个符合 ELF 格式的文件了。此外，如果我们需要对 ELF 文件的多个 section 进行签名，在文件末尾追加的方法将具有较差的可扩展性和灵活性。此外，无法通过 `readelf` 或 `objdump` 等工具读取签名数据。
 
-在 ELF 文件中间添加数据的方法稍微复杂一些，因为其中涉及到对 ELF 的文件格式进行解析。另外，在 ELF 文件中添加若干新的 section，可能会涉及到对 ELF 文件中其它数据的修改。但是，通过这种方法，我们可以在 ELF 文件中随意添加 section，并可以在 ELF 的 section header table 结构中记录这些 section 的元信息。这样有便于内核从签名后的 ELF 文件中快速获取有效的签名数据。
+在 ELF 文件中间添加数据的方法稍微复杂一些，因为其中涉及到对 ELF 的文件格式进行解析。另外，在 ELF 文件中添加若干新的 section，可能会涉及到对 ELF 文件中其它数据的修改。但是，通过这种方法，我们可以在 ELF 文件中添加任意多个 section，并可以在 ELF 的 section header table 结构中记录这些 section 的元信息。这样有便于内核从签名后的 ELF 文件中快速获取有效的签名数据。
 
 ## 5.2 将签名数据 section 注入 ELF 文件
 
-一般来说，`.symtab` `.strtab` `.shstrtab` 三个 section 较为特殊，根据业界的习惯，通常作为 ELF 文件的最后三个 section。因此当我们想要在 ELF 文件中插入一个 section 时，应当把新插入的 section 恰好放置在这三个特殊 section 之前，如下图所示。这样做有两点好处：
+在 ELF 文件中，`.symtab` `.strtab` `.shstrtab` 三个 section 较为特殊。根据业界的习惯，通常将这三个 section 作为 ELF 文件的最后三个 section。因此当我们想要在 ELF 文件中插入一个 section 时，应当把新插入的 section 恰好放置在这三个特殊 section 之前，如下图所示。这样做有两点好处：
 
-* 维持了 ELF 文件的业界习惯
+* 保持了 ELF 文件布局的业界习惯
 * 避免破坏 program header table 与之前其它 section 之间的引用关系
 
 ![&#x5728; ELF &#x6587;&#x4EF6;&#x4E2D;&#x6CE8;&#x5165;&#x4E00;&#x4E2A;&#x65B0;&#x7684; section](../.gitbook/assets/elf-new-section.png)
 
-基于这种方案，注入一个新的 section 可能涉及到对 ELF 多个部分的修改：
+基于这种方案，注入一个新的 section 涉及到对 ELF 文件多个部分的修改：
 
 * ELF header 中的变动
   * Section header table 在文件中的偏移会被插入的内容向后挤
-  * Section header 的数量将会增加
-  * 新的 section 被插入在 section header string table section 的前面，那么 ELF header 中指向该 section 的索引将会增加
+  * Section header table 中的 entry 数量将会增加
+  * 新的 section 被插入在三个特殊 section 的前面，导致 ELF header 中指向 section header string table section 的索引增加
 * Section header table 中的变动
   * Section header table 中将会多一个 entry，该 entry 指明新 section 在文件中的位置、长度、类型等信息
+  * 三个特殊 section 在文件中的位置、引用信息发生更新
 * Section header string table section 中的变动
-  * 被插入的新 section 的名称字符串将会插入到这个 section 中
+  * 新 section 的名称字符串将会插入到这个 section 中，引发该 section 的长度发生变化
 * Section 数据区域的变动
   * 带有签名数据的新 section 将会被添加在数据区域中
 
