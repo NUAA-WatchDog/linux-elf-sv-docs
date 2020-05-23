@@ -20,10 +20,11 @@
 
 * [Chapter 6 - 密钥/证书生成](group-3-usage/chapter-6-key-generation.md)
 * [Chapter 7 - 编译内核](group-3-usage/chapter-7-kernel-compilation.md)
-* [Chapter 8 - ELF 签名](group-3-usage/chapter-8-elf-sign.md)
+* [Chapter 8 - 挂载模块](group-3-usage/chapter-8-module-loading.md)
+* [Chapter 9 - ELF 签名](group-3-usage/chapter-9-elf-sign.md)
 
 ## 第四部分 - 评估与测试 <a id="group-4-evaluation-and-testing"></a>
 
-* [Chapter 9 - 签名验证机制开销评估](group-4-evaluation-and-testing/chapter-9-kernel-performance-overhead-evaluation.md)
-* [Chapter 10 - ELF 签名开销评估](group-4-evaluation-and-testing/chapter-10-elf-signature-overhead-evaluation.md)
+* [Chapter 10 - 签名验证机制开销评估](group-4-evaluation-and-testing/chapter-10-kernel-performance-overhead-evaluation.md)
+* [Chapter 11 - ELF 签名开销评估](group-4-evaluation-and-testing/chapter-11-elf-signature-overhead-evaluation.md)
 
