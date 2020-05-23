@@ -67,7 +67,18 @@ description: >-
 
 对于一个名为 `elf`的 ELF 文件，在签名成功后，签名程序会保留未被签名的旧版本 ELF 文件 `elf.old` 作为备份，而注入签名后的新 ELF 文件将会被命名为原先的 `elf`。
 
-## 5.3 参考资料
+## 5.3 兼容模式
+
+对于一些较为古老的 ELF 文件，比如 [GNU Coreutils](https://www.gnu.org/software/coreutils/)，其布局与较新的 GCC 编译器编译出的 ELF 文件的布局略有不同：
+
+* 不包含 `symbol table` 和 `string table` 两个 section
+* 只包含 `section header string table`。
+
+在签名程序中，我们提供了一个 `-c` 的选项，可以以 **兼容模式** 对 ELF 文件进行签名。在兼容模式下，签名数据 section 将会被加入到 `section header string table` 的前一个 section 位置：
+
+![&#x517C;&#x5BB9;&#x65E7;&#x7684; ELF &#x6587;&#x4EF6;&#x5E03;&#x5C40;](../.gitbook/assets/elf-new-section-compact.png)
+
+## 5.4 参考资料
 
 [A tutorial introduction to _libelf_](https://sourceforge.net/projects/elftoolchain/files/Documentation/libelf-by-example/20120308/libelf-by-example.pdf/download)\_\_
 
