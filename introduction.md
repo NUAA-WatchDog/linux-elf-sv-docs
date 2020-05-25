@@ -28,5 +28,8 @@
 2. 内核拒绝执行 ELF 文件，并给出错误原因
 {% endhint %}
 
-代码仓库地址：[https://github.com/mrdrivingduck/linux-kernel-elf-sig-verify](https://github.com/mrdrivingduck/linux-kernel-elf-sig-verify)
+代码仓库地址：
+
+* 内核源码树：[https://github.com/mrdrivingduck/linux-kernel-elf-sig-verify](https://github.com/mrdrivingduck/linux-kernel-elf-sig-verify)
+* 可动态装载的独立模块：[https://github.com/mrdrivingduck/linux-kernel-elf-sig-verify-module](https://github.com/mrdrivingduck/linux-kernel-elf-sig-verify-module)
 
