@@ -93,11 +93,12 @@ struct linux_binfmt {
 ```c
 int search_binary_handler(struct linux_binprm *bprm)
 {
-    /* ... */
+    /* 遍历二进制文件处理链表 */
     list_for_each_entry(fmt, &formats, lh) {
-        /* ... */
+        /* 调用每个二进制格式的 load_binary() 函数 */
         retval = fmt->load_binary(bprm);
-        /* ... */
+        /* 如果返回 -ENOEXEC，那么继续遍历链表 */
+        /* 如果返回其它错误，则退出 */
         if (retval != -ENOEXEC || !bprm->file) {
             read_unlock(&binfmt_lock);
             return retval;
