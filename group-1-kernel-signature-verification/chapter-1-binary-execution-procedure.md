@@ -218,6 +218,15 @@ obj-$(CONFIG_BINFMT_FLAT)	+= binfmt_flat.o
 
 ![&#x5904;&#x7406;&#x6A21;&#x5757;&#x88AB;&#x7F16;&#x8BD1;&#x4E3A;&#x5185;&#x6838;&#x6A21;&#x5757;&#x4E4B;&#x540E;&#xFF0C;&#x5728;&#x5904;&#x7406;&#x94FE;&#x8868;&#x4E2D;&#x7684;&#x4F4D;&#x7F6E;](../.gitbook/assets/binfmt-elf-sv-module.png)
 
+处理模块可能返回的错误原因：
+
+* 内核中缺少用于签名验证的密钥
+* ELF 文件中没有指定的签名 section
+* ELF 文件中带有指定的签名 section，但其中的内容无法通过签名验证
+* ELF 格式正确但内容损坏
+* 动态分配内存失败
+* ...
+
 非 ELF 格式的二进制文件将无法通过 `binfmt_elf_signature_verification` 模块的 ELF 格式检查，从而返回 `-ENOEXEC`，交由之后其它的二进制文件处理模块进行处理。
 
 ## 1.6 参考资料
