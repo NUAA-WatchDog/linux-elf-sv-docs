@@ -84,7 +84,7 @@ int verify_pkcs7_signature(const void *data, size_t len,
 ```
 {% endcode %}
 
-在内核代码中，通过 `#include <linux/verification.h>` 使用该函数时，输入 **签名数据** 与 **被签名数据** 的 **缓冲区地址** 和 **数据长度**，就能够使用内置密钥完成签名认证。因此，[binfmt\_elf\_signature\_verifiaction](chapter-1-binary-execution-procedure.md#15-dui-elf-wen-jian-jin-hang-qian-ming-yan-zheng-de-si-lu) 只要能够从 ELF 文件中正确提取 [PKCS \#7](https://tools.ietf.org/html/rfc2315) 格式的签名数据及其相对应的被签名数据，就可以通过这个函数验证签名是否正确。
+在内核代码中，通过 `#include <linux/verification.h>` 使用该函数时，输入 **签名数据** 与 **被签名数据** 的 **缓冲区地址** 和 **数据长度**，就能够使用内置密钥完成签名认证。因此，[binfmt\_elf\_signature\_verifiaction](chapter-1-binary-execution-procedure.md#15-dui-elf-wen-jian-jin-hang-qian-ming-yan-zheng-de-si-lu) 只要能够从 ELF 文件中正确提取 [PKCS \#7](https://tools.ietf.org/html/rfc2315) 格式的签名数据，及其相对应的被签名数据，就可以通过这个函数验证签名是否正确。
 
 ## 3.3 参考资料
 

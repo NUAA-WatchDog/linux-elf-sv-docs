@@ -6,7 +6,7 @@
 
 ### Linux​ 内核版本
 
-当前解决方案使用 Linux kernel 4.15.0 release。但由于没有修改任何内核主线代码，因此可以快速扩展到更高版本的 Linux kernel 中。
+当前解决方案基于 Linux kernel 4.15.0 release。由于没有修改任何内核主线代码，因此可以快速扩展到更高版本的 Linux kernel 中。
 
 ### 依赖软件包
 

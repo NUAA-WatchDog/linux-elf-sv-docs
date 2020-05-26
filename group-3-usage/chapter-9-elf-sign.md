@@ -105,7 +105,7 @@ and the digest algorithm specified by <hash-algo>. If no
 4. `elf-file` - 待签名的目标 ELF 文件
 5. `dest-file` \(可选\) - 签名后的目标文件名
 
-以对一个名为 `sign-target` 的 ELF 文件进行签名为例：
+例子：对一个名为 `sign-target` 的 ELF 文件进行签名：
 
 ```bash
 $ ./elf-sign sha256 certs/kernel_key.pem certs/kernel_key.pem sign-target
@@ -114,6 +114,20 @@ $ ./elf-sign sha256 certs/kernel_key.pem certs/kernel_key.pem sign-target
  --- 29 sections detected.
  --- Section 0014 [.text] detected.
  --- Length of section [.text]: 418
+ --- Signature size of [.text]: 465
+ --- Writing signature to file: .text_sig
+ --- Removing temp signature file: .text_sig
+```
+
+对于一些布局中只有 section header string table 而没有 symbol table 和 string table 的 ELF 程序，使用 [兼容模式选项](../group-2-elf-signer/chapter-5-elf-signature-injection.md#53-jian-rong-mo-shi) `-c` 来进行签名：
+
+```bash
+$ ./elf-sign -c sha256 certs/kernel_key.pem certs/kernel_key.pem /bin/cat mycat
+ --- 64-bit ELF file, version 1 (CURRENT).
+ --- Little endian.
+ --- 30 sections detected.
+ --- Section 0014 [.text] detected.
+ --- Length of section [.text]: 16569
  --- Signature size of [.text]: 465
  --- Writing signature to file: .text_sig
  --- Removing temp signature file: .text_sig

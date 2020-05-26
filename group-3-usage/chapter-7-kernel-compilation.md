@@ -56,13 +56,18 @@ $ make -j8
   ...
 ```
 
-编译完成后，开机运行，查看 proc 文件系统中的 `/proc/keys` \(需要 root 权限\)，应该能够看到自行生成的密钥：
+编译完成后，安装编译后的新内核：
+
+```text
+$ sudo make modules_install
+$ sudo make install
+```
+
+重启电脑开机运行，查看 proc 文件系统中的 `/proc/keys` \(需要 root 权限\)。如果能够看到自行生成的密钥，那么说明自行生成的密钥已经被放置于 OS 内核中。
 
 ```text
 0c87ab47 I------     1 perm 1f030000     0     0 asymmetri WatchDog: ELF verification: 7e0e1ac946e5350460497ba611a475534c9c3ec4: X509.rsa 4c9c3ec4 []
 ```
-
-如果上述步骤没有问题，那么内核 ELF 签名验证机制应当可以正常运作。
 
 ## 7.3 参考资料
 
