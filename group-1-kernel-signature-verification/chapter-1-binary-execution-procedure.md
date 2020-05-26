@@ -42,7 +42,7 @@ struct linux_binprm {
 
 * 通过文件开头是否是 `#!` 来判断是否是一个脚本文件
 * 根据文件开头是否是 `0x7f` `0x45(E)` `0x4c(L)` `0x46(F)` 来判断是否是一个 ELF 文件
-* ......
+* ...
 
 ## 1.3 二进制文件格式处理程序 \(Binary Format Handler\)
 
@@ -51,7 +51,7 @@ struct linux_binprm {
 在该版本的内核源代码中，已经内置了部分二进制文件格式的处理程序 \(handler\)，位于内核代码的 `fs/` 目录下：
 
 * `binfmt_aout` - a.out 格式
-* `binfmt_elf` - ELF \(Execute and Linkable Format\) 格式
+* `binfmt_elf` - ELF \(Execute and Link-able Format\) 格式
 * `binfmt_elf_fdpic`
 * `binfmt_em86`
 * `binfmt_flat`
@@ -214,7 +214,7 @@ obj-$(CONFIG_BINFMT_FLAT)	+= binfmt_flat.o
 1. 判断该二进制文件是否符合 ELF 格式
 2. 如果符合 ELF 格式，则取出二进制文件中的数字签名，并进行验证
 
-用户可以在内核启动后，通过 `insmod` 命令动态加载这个模块，通过 `rmmod` 命令动态卸载这个模块。当用户准备挂载该模块时，内核中的二进制处理模块链表已经初始化完成了。由于模块被插入链表的方式只有从链表头插入和从链表尾插入，而插入到链表尾部使得模块无法在系统内置的 `binfmt_elf` 模块之前被执行，因此只能在链表的头部插入我们的处理模块：
+用户可以在内核启动后，通过 `insmod` 命令动态加载这个模块，通过 `rmmod` 命令动态卸载这个模块。当用户准备挂载该模块时，内核中的二进制处理模块链表已经初始化完成了。由于模块被插入链表的方式只有从链表头插入和从链表尾插入，而插入到链表尾部使得模块无法在系统内置的 `binfmt_elf` 模块之前被执行，因此只能在链表的头部插入这个处理模块：
 
 ![&#x5904;&#x7406;&#x6A21;&#x5757;&#x88AB;&#x7F16;&#x8BD1;&#x4E3A;&#x5185;&#x6838;&#x6A21;&#x5757;&#x4E4B;&#x540E;&#xFF0C;&#x5728;&#x5904;&#x7406;&#x94FE;&#x8868;&#x4E2D;&#x7684;&#x4F4D;&#x7F6E;](../.gitbook/assets/binfmt-elf-sv-module.png)
 

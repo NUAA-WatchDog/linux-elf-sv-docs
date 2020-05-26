@@ -1,7 +1,8 @@
 # Table of contents
 
-* [Linux ELF 文件签名保护解决方案](README.md)
+* [Linux ELF 文件数据完整性保护解决方案](README.md)
 * [背景](background.md)
+* [简介](introduction.md)
 * [运行环境与依赖](environment-and-dependencies.md)
 
 ## 第一部分 - 内核 ELF 签名验证机制 <a id="group-1-kernel-signature-verification"></a>
