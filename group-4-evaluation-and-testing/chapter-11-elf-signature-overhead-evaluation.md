@@ -26,7 +26,11 @@ ELF 签名程序所带来的开销主要来自于：
 
 这里主要关注签名数据作为新的 section 被加入原 ELF 文件后，会使 ELF 文件大小增加多少。
 
-上面已经提到，由于对一个 section 计算出的摘要是一个 **定长** 序列，那么计算得到的数字签名也是定长的。在使用 _SHA-256_ 和 _RSA-2048_ 作为签名工具链的条件下，我们测试得到每个 section 会为 ELF 文件带来 560 Bytes 左右的额外开销 \(签名数据 + section header 中新的 section 项 + string table section 中该 section 的名称\)。
+上面已经提到，由于对一个 section 计算出的摘要是一个 **定长** 序列，那么计算得到的数字签名也是定长的。在使用 _SHA-256_ 和 _RSA-2048_ 作为签名工具链的条件下，我们测试得到每个 section 会为 ELF 文件带来 560 Bytes 左右的额外开销，包含了：
+
+* 签名数据
+* Section header table 中新的 section 项
+* Section header string table 中该 section 的名称
 
 对于现代计算机的硬件来说，这个空间开销基本上可以忽略。规模越大的 ELF 文件，开销所占的百分比越小。
 
