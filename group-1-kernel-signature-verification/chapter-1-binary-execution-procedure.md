@@ -1,6 +1,6 @@
 ---
 description: >-
-  通过分析内核源码，理解内核是如何执行一个二进制文件的。特别地，通过利用内核对不同二进制文件格式的处理机制，使得内核开始处理 ELF
+  通过分析内核源码，理解内核如何执行一个二进制文件。特别地，通过利用内核对不同二进制文件格式的处理机制，使得内核开始处理 ELF
   文件之前，在不修改内核原有代码的前提下，找到一个能够验证 ELF 文件中的数字签名的机会。
 ---
 
@@ -8,9 +8,9 @@ description: >-
 
 ## 1.1 内核如何执行一个二进制文件
 
-当我们在 shell 中敲入命令，试图执行一个二进制文件时，shell 会调用 Linux 内核的 `execve` 系统调用。该系统调用会将二进制文件载入内存，判断其格式是否合法、是否具有执行权限。如果一切正常，则将进程的代码段、数据段替换为新程序的段，并设置好命令行参数、环境变量、新的程序入口，完成新程序开始运行前的一切准备工作。
+当我们在 shell 中敲入命令，试图执行一个二进制文件时，shell 会调用 Linux 内核的 `execve` 系统调用。该系统调用会将二进制文件载入内存，判断其格式是否合法、是否具有执行权限。如果一切正常，则将当前进程的代码段、数据段替换为新程序的段，并设置好命令行参数、环境变量、新的程序入口，完成新程序开始运行前的一切准备工作。
 
-如果 `execve` 的执行一切正常，那么该进程原有程序的运行环境都会被新进程完全替换，因此 `execve` 永远不会返回。对于使用 shell 的用户来说，希望能够在运行完一条命令后再次回到 shell 中继续输入下一条命令。为了避免 shell 进程在调用 `execve` 之后被新程序覆盖，在 terminal 的实现中，通常会通过 `fork` 系统调用，先复制出一个当前进程的副本，然后在副本进程中调用 `execve`。执行结束后，回到 shell 的原进程中，使得用户可以继续执行下一个程序。
+如果 `execve` 的执行一切正常，那么该进程原有程序的运行环境都会被新进程完全替换。对于使用 shell 的用户来说，希望能够在运行完一条命令后再次回到 shell 中继续输入下一条命令。为了避免 shell 进程在调用 `execve` 之后被新程序覆盖，在 shell 的实现中，通常会通过 `fork` 系统调用，先复制出一个当前进程的副本，然后在副本进程中调用 `execve`。执行结束后，回到 shell 的原进程中，使得用户可以继续执行下一个程序。
 
 ![Shell &#x6267;&#x884C;&#x7A0B;&#x5E8F;&#x7684;&#x6D41;&#x7A0B;](../.gitbook/assets/shell.png)
 
@@ -19,10 +19,10 @@ description: >-
 内核支持执行多种不同格式的二进制文件。比如一个 ELF 文件，或是一个 shell script，甚至还可以是一幅图片，或一个 PDF 文档。对于不同的二进制文件格式，内核需要为其准备不同的运行环境：
 
 * 对于一个 ELF 文件，内核需要找到该文件的代码段和数据段，以及程序的首条指令地址，并将这些信息设置在进程控制块中
-* 对于一个 shell script，内核需要寻找脚本指定的解释器，并将脚本文件名作为启动解释器的参数
-* 对于一个 PDF 文档或图片，内核也需要寻找对应的解释器，并将文件作为解释器参数
+* 对于一个 shell script，内核需要寻找脚本指定的解释器，并将脚本文件名作为参数，启动脚本解释器解释执行脚本
+* 对于一个 PDF 文档或图片，内核也需要寻找对应的解释器，并将文件名作为解释器参数，启动解释器
 
-为了识别二进制文件的格式，内核会将二进制文件的前 128 个字节读到如下的结构体中：
+为了识别二进制文件的格式，内核会将二进制文件的前 128 个字节载入内存中如下的结构体中：
 
 {% code title="include/linux/binfmts.h" %}
 ```c
@@ -38,15 +38,15 @@ struct linux_binprm {
 ```
 {% endcode %}
 
-根据 magic value \(每个格式特有的字节序列\) 等信息，判断出二进制文件的格式。比如：
+内核根据 magic value \(每个格式特有的字节序列\) 等信息，识别出二进制文件的格式。比如：
 
-* 通过文件开头是否是 `#!` 来判断是否是一个脚本文件
+* 根据文件开头是否是 `#!` 来判断是否是一个脚本文件
 * 根据文件开头是否是 `0x7f` `0x45(E)` `0x4c(L)` `0x46(F)` 来判断是否是一个 ELF 文件
 * ...
 
 ## 1.3 二进制文件格式处理程序 \(Binary Format Handler\)
 
-在 Linux 4.15.0 中，内核能够执行 **哪些格式** 的二进制文件呢？
+在 Linux 4.15.0 中，内核能够执行哪些格式的二进制文件呢？
 
 在该版本的内核源代码中，已经内置了部分二进制文件格式的处理程序 \(handler\)，位于内核代码的 `fs/` 目录下：
 
@@ -114,7 +114,7 @@ int search_binary_handler(struct linux_binprm *bprm)
 
 1. 当前处理函数不能识别这个二进制文件的格式，则返回 `-ENOEXEC` 的错误码，继续尝试用下一个处理函数识别该文件的格式
 2. 当前处理函数成功识别了这个二进制文件的格式，并顺利完成了执行这个二进制文件的准备工作，exec 系统调用正确返回
-3. 当前处理函数成功识别了这个二进制文件的格式，但在执行该文件准备工作的过程中发生了错误 \(比如动态分配内存失败\)，则将相应错误码返回 exec 系统调用并停止遍历链表。最终 exec 系统调用将错误码返回 bash，向用户展示出错原因
+3. 当前处理函数成功识别了这个二进制文件的格式，但在执行该文件准备工作的过程中发生了错误 \(比如动态分配内存失败，或该文件的内容损坏/不一致\)，则将相应错误码返回 exec 系统调用并停止遍历链表。最终 exec 系统调用将错误码返回 bash，向用户展示出错原因
 
 示意图如下所示：
 
@@ -143,27 +143,27 @@ int search_binary_handler(struct linux_binprm *bprm)
  * This only exists for built-in code, not for modules.
  * Keep main.c:initcall_level_names[] in sync.
  */
-#define pure_initcall(fn)		__define_initcall(fn, 0)
+#define pure_initcall(fn)           __define_initcall(fn, 0)
 
-#define core_initcall(fn)		__define_initcall(fn, 1)
-#define core_initcall_sync(fn)		__define_initcall(fn, 1s)
-#define postcore_initcall(fn)		__define_initcall(fn, 2)
+#define core_initcall(fn)           __define_initcall(fn, 1)
+#define core_initcall_sync(fn)      __define_initcall(fn, 1s)
+#define postcore_initcall(fn)       __define_initcall(fn, 2)
 #define postcore_initcall_sync(fn)	__define_initcall(fn, 2s)
-#define arch_initcall(fn)		__define_initcall(fn, 3)
-#define arch_initcall_sync(fn)		__define_initcall(fn, 3s)
-#define subsys_initcall(fn)		__define_initcall(fn, 4)
-#define subsys_initcall_sync(fn)	__define_initcall(fn, 4s)
-#define fs_initcall(fn)			__define_initcall(fn, 5)
-#define fs_initcall_sync(fn)		__define_initcall(fn, 5s)
-#define rootfs_initcall(fn)		__define_initcall(fn, rootfs)
-#define device_initcall(fn)		__define_initcall(fn, 6)
-#define device_initcall_sync(fn)	__define_initcall(fn, 6s)
-#define late_initcall(fn)		__define_initcall(fn, 7)
-#define late_initcall_sync(fn)		__define_initcall(fn, 7s)
+#define arch_initcall(fn)           __define_initcall(fn, 3)
+#define arch_initcall_sync(fn)      __define_initcall(fn, 3s)
+#define subsys_initcall(fn)         __define_initcall(fn, 4)
+#define subsys_initcall_sync(fn)    __define_initcall(fn, 4s)
+#define fs_initcall(fn)             __define_initcall(fn, 5)
+#define fs_initcall_sync(fn)        __define_initcall(fn, 5s)
+#define rootfs_initcall(fn)         __define_initcall(fn, rootfs)
+#define device_initcall(fn)         __define_initcall(fn, 6)
+#define device_initcall_sync(fn)    __define_initcall(fn, 6s)
+#define late_initcall(fn)           __define_initcall(fn, 7)
+#define late_initcall_sync(fn)      __define_initcall(fn, 7s)
 ```
 {% endcode %}
 
-其中，等级越高 \(优先级数值越小\) 的模块越先被初始化。而在每个二进制格式处理模块中，都会声明当前模块在哪个等级上被初始化。以 ELF 格式处理模块 \(`binfmt_elf`\) 为例：
+其中，等级越高 \(优先级数值越小\) 的模块越先被初始化。而在每个二进制格式处理函数中，都会声明当前模块在哪个等级上被初始化。以 ELF 格式处理模块 \(`binfmt_elf`\) 为例：
 
 {% code title="fs/binfmt\_elf.c" %}
 ```c
@@ -196,7 +196,7 @@ obj-$(CONFIG_BINFMT_FLAT)	+= binfmt_flat.o
 
 #### 处理模块在链表上注册的方式
 
-每个二进制格式处理模块中都定义了初始化函数。在该函数中，该模块将其自身注册到内核的处理模块链表上。有两种注册二进制格式的方式：
+每个二进制格式处理模块中都定义了初始化函数。在该函数中，该模块将其自身注册到内核的二进制文件处理函数链表上。内核提供两种注册二进制文件处理模块的方式：
 
 * `register_binfmt(&xxx_format)`
 * `insert_binfmt(&xxx_format)`
@@ -207,18 +207,18 @@ obj-$(CONFIG_BINFMT_FLAT)	+= binfmt_flat.o
 
 本解决方案的目标是，在内核为执行一个 ELF 文件进行准备工作之前，先对 ELF 中的签名进行验证。如果验证通过，则继续进行准备工作；如果验证失败，则内核拒绝执行这个 ELF 文件。
 
-解决方案的核心思想是，实现一个伪 ELF 处理模块 \(`binfmt_elf_signature_verification`\)，并将该模块注册在链表中 ELF 处理模块的前面。在该模块中，实现签名验证的逻辑。如果签名验证通过，则返回 `-ENOEXEC` 错误码，使得内核继续调用真正的 ELF 处理模块；如果签名验证不通过，则直接返回其它错误码，使得内核不再调用真正的 ELF 处理模块。
+解决方案的核心思想是，实现一个 ELF 签名验证模块 \(`binfmt_elf_signature_verification`\)，并将该模块注册在链表中 ELF 处理模块之前。在该模块中，实现签名验证的逻辑。如果签名验证通过，则返回 `-ENOEXEC` 错误码，使得内核继续遍历链表，调用真正的 ELF 处理模块；如果签名验证不通过，则直接返回其它错误码，使得内核不再继续调用真正的 ELF 处理模块。
 
 在这个伪 ELF 处理模块中，需要进行的工作主要有两点：
 
 1. 判断该二进制文件是否符合 ELF 格式
-2. 如果符合 ELF 格式，则取出二进制文件中的数字签名，并进行验证
+2. 如果符合 ELF 格式，则取出二进制文件中附带的数字签名，并进行验证
 
 用户可以在内核启动后，通过 `insmod` 命令动态加载这个模块，通过 `rmmod` 命令动态卸载这个模块。当用户准备挂载该模块时，内核中的二进制处理模块链表已经初始化完成了。由于模块被插入链表的方式只有从链表头插入和从链表尾插入，而插入到链表尾部使得模块无法在系统内置的 `binfmt_elf` 模块之前被执行，因此只能在链表的头部插入这个处理模块：
 
 ![&#x5904;&#x7406;&#x6A21;&#x5757;&#x88AB;&#x7F16;&#x8BD1;&#x4E3A;&#x5185;&#x6838;&#x6A21;&#x5757;&#x4E4B;&#x540E;&#xFF0C;&#x5728;&#x5904;&#x7406;&#x94FE;&#x8868;&#x4E2D;&#x7684;&#x4F4D;&#x7F6E;](../.gitbook/assets/binfmt-elf-sv-module.png)
 
-处理模块可能返回的错误原因：
+ELF 签名验证模块可能返回的错误原因：
 
 * 内核中缺少用于签名验证的密钥
 * ELF 文件中没有指定的签名 section
@@ -227,7 +227,7 @@ obj-$(CONFIG_BINFMT_FLAT)	+= binfmt_flat.o
 * 动态分配内存失败
 * ...
 
-非 ELF 格式的二进制文件将无法通过 `binfmt_elf_signature_verification` 模块的 ELF 格式检查，从而返回 `-ENOEXEC`，交由之后其它的二进制文件处理模块进行处理。
+非 ELF 格式的二进制文件 \(如 shell 脚本\) 将无法通过 `binfmt_elf_signature_verification` 模块的 ELF 格式检查，从而返回 `-ENOEXEC`，交由之后其它的二进制文件处理模块进行处理。
 
 ## 1.6 参考资料
 

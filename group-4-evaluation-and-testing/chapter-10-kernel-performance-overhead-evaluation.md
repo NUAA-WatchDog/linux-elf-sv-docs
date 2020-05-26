@@ -65,8 +65,9 @@ description: 评估在内核中引入了签名验证机制后所带来的各类�
 
 我们对测试结果进行了分析解读：
 
-1. 没有签名验证的执行时间基本稳定；而加入签名验证机制后，执行时间与代码段长度相关 - 比如 `tar` 程序的代码段特别长，因此需要更长的时间用于计算代码段的摘要
-2. 加入签名验证机制后执行时间平均翻 5 - 7 倍，主要原因是读取 ELF 文件的 section header table、section header string table、签名 section 与被签名 section 而引入了额外的 I/O 开销。由于 `execve()` 原本就能够在 100μs 左右的时间内结束，是一个相对较快的过程；而额外的 I/O 操作起码会将 `execve()` 的执行时间提升半个数量级
+1. 没有签名验证的执行时间基本稳定在 90-100 μs，因为内核内置的 ELF 处理模块仅需要访问 ELF header 和 program header table，而 program header table 紧靠在 ELF header 之后，基本已经位于内存中的高速缓冲区 \(buffer\) 中，因此不需要额外的 I/O 开销
+2. 加入签名验证机制后，exec 系统调用的执行时间与代码段长度相关 - 比如 `tar` 程序的代码段特别长，因此需要更长的时间用于计算代码段的摘要
+3. 加入签名验证机制后，exec 系统调用的执行时间平均翻了 5 - 7 倍，主要原因是将 ELF 文件的 section header table、section header string table、签名 section 与被签名 section 载入内存引入了额外的 I/O 开销。由于 exec 系统调用原本就能够在 90-100 μs 左右的时间内结束，是一个相对较快的过程；而额外的 I/O 操作起码会将 exec 系统调用的执行时间提升半个数量级，因为 I/O 的速度远比内存慢
 
 ## 9.3 空间开销
 

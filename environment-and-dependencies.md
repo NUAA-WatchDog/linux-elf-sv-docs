@@ -10,7 +10,7 @@
 
 ### 依赖软件包
 
-由于用户空间的签名程序需要解析 ELF 文件格式，还需要应用一些密码学的算法，因此需要一些 Debian 软件包作为依赖。基于 Debian 系列的 Linux 发行版可以使用 **APT** \(Advanced Package Tool\) 工具轻易安装这些依赖。签名程序依赖的软件包如下：
+运行于用户空间的 ELF 数字签名程序需要解析 ELF 文件格式，还需要应用一些密码学的算法，因此需要一些 Debian 软件包作为依赖。基于 Debian 系列的 Linux 发行版可以使用 **APT** \(Advanced Package Tool\) 工具轻易安装这些依赖。签名程序依赖的软件包如下：
 
 * `libssl-dev`
 
