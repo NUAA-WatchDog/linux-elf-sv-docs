@@ -30,7 +30,7 @@ ELF 签名程序所带来的开销主要来自于：
 
 * 签名数据
 * Section header table 中新的 section 项
-* Section header string table 中该 section 的名称
+* Section header string table 中该 section 的名称字符串
 
-对于现代计算机的硬件来说，这个空间开销基本上可以忽略。规模越大的 ELF 文件，开销所占的百分比越小。
+对于现代计算机的硬件来说，这个空间开销基本上可以忽略。规模越大的 ELF 文件，这个开销所占的百分比越小。
 

@@ -35,7 +35,7 @@ Section 主要用于链接器对代码的重定位，如汇编程序中的 `.tex
 2. Program header table
 3. Section header table
 
-ELF header 指明了 ELF 文件的整体信息，如 ELF 文件的 magic value、类型、版本、目标机器等。另外，ELF 还指明了 program header table 与 section header table 两个表在文件中的偏移位置、条目个数、条目大小。这两个表的位置和长度随着 section/segment 的个数而变化，而 ELF header 总是位于文件最开头，且长度固定。显然，如果想要访问 program header table 和 section header table 中的信息，必须通过 ELF header。
+ELF header 指明了 ELF 文件的整体信息，如 ELF 文件的 magic value、类型、版本、目标机器等。另外，ELF 还指明了 program header table 与 section header table 两个表在文件中的偏移位置、条目个数、条目大小。这两个表的位置和长度随着 section/segment 的个数而变化，而 ELF header 总是位于文件最开头，且长度固定。显然，如果想要访问 program header table 和 section header table 中的信息，必须通过 ELF header 来找到它们在文件中的确切位置。
 
 Program header table 主要描述了将哪一个或哪几个 section 组织为一个 segment，以及各个 segment 的描述信息。Section header table 描述了 ELF 文件中所有的 section，以及每个 section 的类型、长度等描述信息。
 
@@ -45,7 +45,7 @@ Section header table 中并不存储每个 section 的名称。所有 section �
 
 ## 2.3 内核从 ELF 中取得数字签名的步骤
 
-内核在对 [二进制文件处理函数链表](chapter-1-binary-execution-procedure.md#15-dui-elf-wen-jian-jin-hang-qian-ming-yan-zheng-de-si-lu) 进行遍历时，已经读取了该文件的头 128 字节。如果该二进制文件是一个 ELF 文件，那么已读取的内容中已经包含了 ELF 文件的 ELF header。首先，通过 magic value 检验二进制文件是否是一个 ELF 文件；判断 ELF 文件类型是否为 `ET_EXEC` \(可执行文件\) 或 `ET_DYN` \(动态链接文件\)。
+内核在对 [二进制文件处理函数链表](chapter-1-binary-execution-procedure.md#15-dui-elf-wen-jian-jin-hang-qian-ming-yan-zheng-de-si-lu) 进行遍历时，已经读取了该文件的 [头 128 字节](chapter-1-binary-execution-procedure.md#12-nei-he-ru-he-shi-bie-bu-tong-ge-shi-de-er-jin-zhi-wen-jian)。如果该二进制文件是一个 ELF 文件，那么已读取的内容中已经包含了 ELF 文件的 ELF header。由此，首先通过 ELF header 中的 magic value 检验二进制文件是否是一个 ELF 文件；判断 ELF 文件类型是否为 `ET_EXEC` \(可执行文件\) 或 `ET_DYN` \(动态链接文件\)。
 
 其次，根据 ELF header 中指示的 section header table 的位置、条目个数、每个条目的大小，可以将 section header table 读入内存；根据 ELF header 中指示的 section header string table 的索引，以及已经读入内存的 section header table，可以将 section header string table 读入内存。
 
@@ -56,9 +56,9 @@ Section header table 中并不存储每个 section 的名称。所有 section �
 * 被签名 section `.text` 与签名信息 section `.text_sig`
 * ...
 
-在找到这两个相互对应的 section 之后，再根据 section header table 中指示的这两个 section 在文件中的位置与长度，将这两个 section 的具体数据载入内存。
+在找到这两个相互对应的 section 之后，再根据 section header table 中指示的这两个 section 在文件中的偏移与长度，将这两个 section 的具体数据载入内存。
 
-最终，对这一对 section 数据进行签名验证。如果所有的签名验证都正确，那么 [binfmt\_elf\_signature\_verification](chapter-1-binary-execution-procedure.md#15-dui-elf-wen-jian-jin-hang-qian-ming-yan-zheng-de-si-lu) 模块会返回 `-ENOEXEC` 错误码，使内核随后调用真正的 ELF 处理模块完成相应的工作；如果签名验证错误，那么模块返回其它错误码，内核将无法继续执行这个 ELF 文件。
+最终，基于每对匹配的 section 数据进行签名验证。如果所有的签名验证都正确，那么 [ELF 签名验证模块](chapter-1-binary-execution-procedure.md#15-dui-elf-wen-jian-jin-hang-qian-ming-yan-zheng-de-si-lu) 会返回 `-ENOEXEC` 错误码，使内核随后调用真正的 ELF 处理模块完成相应的工作；如果签名验证错误，那么模块返回其它错误码，内核将无法继续执行这个 ELF 文件。
 
 ## 2.4 参考资料
 

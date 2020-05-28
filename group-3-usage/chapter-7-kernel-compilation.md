@@ -25,7 +25,7 @@ config SYSTEM_TRUSTED_KEYS
 ```
 {% endcode %}
 
-这个编译选项允许一个 PEM 格式的 X.509 证书被添加到系统默认的密钥环上。编辑这一个选项，将其设置为 [PEM 格式公钥证书的路径](chapter-6-key-generation.md#62-mi-yao-sheng-cheng)：
+这个编译选项允许一个 PEM 格式的 X.509 证书被添加到系统默认的密钥环上。编辑这个选项，将其设置为 [PEM 格式公钥证书的路径](chapter-6-key-generation.md#62-mi-yao-sheng-cheng)：
 
 {% code title=".config" %}
 ```text
@@ -63,7 +63,7 @@ $ sudo make modules_install
 $ sudo make install
 ```
 
-重启电脑开机运行，查看 proc 文件系统中的 `/proc/keys` \(需要 root 权限\)。如果能够看到自行生成的密钥，那么说明自行生成的密钥已经被放置于 OS 内核中。
+重启电脑开机运行，查看 proc 文件系统中的 `/proc/keys` \(需要 root 权限\)。如果能够看到自行生成的密钥，那么说明该密钥已经被放置于内核的系统密钥环中。
 
 ```text
 0c87ab47 I------     1 perm 1f030000     0     0 asymmetri WatchDog: ELF verification: 7e0e1ac946e5350460497ba611a475534c9c3ec4: X509.rsa 4c9c3ec4 []

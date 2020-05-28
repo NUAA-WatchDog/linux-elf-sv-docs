@@ -12,7 +12,7 @@ description: 使用 ELF 文件签名程序，对一个未被签名的 ELF 文件
 $ sudo apt install libssl-dev
 ```
 
-在 GitHub 上克隆 [ELF 文件签名程序](https://github.com/mrdrivingduck/linux-elf-binary-signer) 的代码仓库，通过 `make` 命令自动编译、构建签名程序，并对签名程序进行签名：
+在 GitHub 上克隆 [ELF 文件签名程序](https://github.com/mrdrivingduck/linux-elf-binary-signer) 的代码仓库，通过 `make` 命令自动编译、构建签名程序，并对构建出的签名程序本身进行签名：
 
 ```bash
 $ make
@@ -30,7 +30,7 @@ cc -o sign-target sign_target.c
 ```
 
 {% hint style="info" %}
-由于自行构建得到的 `elf-sign` 也是一个 ELF 程序，因此，在它可以用于对其它 ELF 文件进行签名之前，其自身也必须被签名，否则内核将拒绝执行这个 ELF 程序。在仓库中，我们提供了一个已经被仓库中的测试密钥 \(`certs/kernel_key.pem`\) 签名后的 `elf-sign.signed`，并用这个已有的签名程序对 `make` 命令构建的 `elf-sign` 进行签名。
+由于自行构建得到的 `elf-sign` 也是一个 ELF 程序，因此，在它可以用于对其它 ELF 文件进行签名之前，其自身必须先被签名，否则内核将拒绝执行这个 ELF 程序。在仓库中，我们提供了一个已经被测试密钥 \(`certs/kernel_key.pem`\) 签名后的签名程序 `elf-sign.signed`，并用这个签名程序对 `make` 命令构建的 `elf-sign` 进行签名。
 
 如果您自行生成了私钥与公钥证书，那么您可能需要在一个 **没有 ELF 签名验证机制** 且 **确认安全** 的内核上，对自行构建得到的 `elf-sign` 进行自签名。然后，这个被签名后的签名程序可以使用在具有 ELF 签名验证机制的内核上。
 {% endhint %}
@@ -103,9 +103,9 @@ and the digest algorithm specified by <hash-algo>. If no
 2. `key` - 存放用于签名的私钥的文件路径
 3. `x509` - 存放用于签名的公钥证书的文件路径
 4. `elf-file` - 待签名的目标 ELF 文件
-5. `dest-file` \(可选\) - 签名后的目标文件名
+5. `dest-file` \(可选\) - 签名后的输出文件名
 
-例子：对一个名为 `sign-target` 的 ELF 文件进行签名：
+比如，用测试证书中的 RSA-2048 私钥与 SHA-256 摘要算法，对一个名为 `sign-target` 的 ELF 文件进行签名：
 
 ```bash
 $ ./elf-sign sha256 certs/kernel_key.pem certs/kernel_key.pem sign-target
@@ -119,7 +119,7 @@ $ ./elf-sign sha256 certs/kernel_key.pem certs/kernel_key.pem sign-target
  --- Removing temp signature file: .text_sig
 ```
 
-对于一些布局中只有 section header string table 而没有 symbol table 和 string table 的 ELF 程序，使用 [兼容模式选项](../group-2-elf-signer/chapter-5-elf-signature-injection.md#53-jian-rong-mo-shi) `-c` 来进行签名：
+对于布局中只有 section header string table 而没有 symbol table 和 string table 的 ELF 程序，使用 [兼容模式选项](../group-2-elf-signer/chapter-5-elf-signature-injection.md#53-jian-rong-mo-shi) `-c` 来进行签名：
 
 ```bash
 $ ./elf-sign -c sha256 certs/kernel_key.pem certs/kernel_key.pem /bin/cat mycat

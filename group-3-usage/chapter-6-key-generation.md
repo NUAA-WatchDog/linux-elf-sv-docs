@@ -28,16 +28,16 @@ subjectKeyIdentifier=hash
 authorityKeyIdentifier=keyid
 ```
 
-配置信息的含义：
+其中可自行修改的配置信息及其含义：
 
-* `default_bits` 表示密钥长度
+* `default_bits` 表示密钥长度 \(2048-bit / 4096-bit / ...\)
 * `O` 表示密钥所属组织的名称
-* `CN` 代表密钥的 common name
-* `emailAddress` 为电子邮箱
+* `CN` 代表密钥的通用名称
+* `emailAddress` 代表密钥所属组织的电子邮箱
 
 ## 6.2 密钥生成
 
-有了 [上述配置文件](chapter-6-key-generation.md#61-mi-yao-sheng-cheng-de-pei-zhi-wen-jian) 之后，通过 OpenSSL 工具的支持，使用如下命令产生 **公私钥** 及 **证书**：
+有了 [上述配置文件](chapter-6-key-generation.md#61-mi-yao-sheng-cheng-de-pei-zhi-wen-jian) 之后，通过 OpenSSL 工具，使用如下命令产生 **公私钥** 并导入 **证书**：
 
 ```bash
 $ openssl req -new -nodes -utf8 -sha256 -days 36500 -batch -x509 \
@@ -50,9 +50,9 @@ writing new private key to 'kernel_key.pem'
 -----
 ```
 
-命令将使用配置文件 `x509.genkey` 中的信息，产生一对 RSA 公私钥；生成一个名为 `kernel_key.pem` 的 PEM 格式的 X.509 自签名证书，过期日期为 36500 天后 \(相当于永不过期\)；生成的 RSA 私钥与公钥证书全部导入到 `kernel_key.pem` 中。
+命令将使用配置文件 `x509.genkey` 中的信息，产生一对 RSA 公私钥；生成一个名为 `kernel_key.pem` 的 PEM 格式的 X.509 自签名证书，过期日期为 36500 天后 \(永不过期\)；生成的 RSA 私钥与公钥证书全部导入到 `kernel_key.pem` 中。
 
-该文件可以作为 ELF 签名程序的输入 \(签名需要私钥和 X.509 格式的公钥证书\)，同时也用于编译到内核的系统内置公钥证书密钥环中。
+该文件可以作为 ELF 签名程序的输入 \(签名需要私钥和 X.509 格式的公钥证书\)，同时也是编译内核时 `CONFIG_SYSTEM_TRUSTED_KEYS` 选项指向的文件。
 
 {% hint style="info" %}
 我们在 [**内核源代码仓库**](https://github.com/mrdrivingduck/linux-kernel-elf-sig-verify) 与 [**签名程序代码仓库**](https://github.com/mrdrivingduck/linux-elf-binary-signer) 放置了同一个 PEM 文件，其中的公私钥仅用于测试，请不要在生产环境中直接使用。[暴露私钥会导致所有的机制失效](https://www.kernel.org/doc/html/v4.15/admin-guide/module-signing.html#administering-protecting-the-private-key)。

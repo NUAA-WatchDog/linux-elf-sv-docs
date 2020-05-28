@@ -6,7 +6,7 @@ description: '通过 OpenSSL 库以及一对公私钥，应用指定的摘要算
 
 ## 4.1 数字摘要
 
-数字摘要能够将任意长度的消息变成固定长度的短消息。数字摘要就是采用单向 hash 函数将需要加密的明文摘要成一串 **固定长度** 的密文，称为数字指纹。不同的明文摘要成密文，其结果总是不同的；而对于同样的明文，摘要必定一致。 一个 hash 函数的好坏是由发生碰撞的概率决定的。如果攻击者能够轻易地构造出两个具有相同 hash 值的消息，那么这样的 hash 函数是很危险的。
+数字摘要能够将任意长度的消息变成固定长度的短消息。数字摘要就是采用单向 hash 函数将需要加密的明文摘要成一串 **固定长度** 的密文，也被称为数字指纹。不同的明文摘要成密文，其结果总是不同的；而对于同样的明文，摘要必定一致。 一个 hash 函数的好坏是由发生碰撞的概率决定的。如果攻击者能够轻易地构造出两个具有相同 hash 值的消息，那么这样的 hash 函数是很危险的。
 
 一些常见的摘要算法有：
 
@@ -19,7 +19,7 @@ description: '通过 OpenSSL 库以及一对公私钥，应用指定的摘要算
 
 ## 4.2 数字签名
 
-数字签名 \(又称公钥数字签名\) 是只有信息的发送者才能产生的，别人无法伪造的一段数字串。这段数字串同时也是对信息发送者发送信息真实性的有效证明。它是一种类似写在纸上的普通的物理签名，但是使用了公钥加密领域的技术实现，用于鉴别数字信息。一套数字签名通常定义两种互补的运算：
+数字签名 \(又称公钥数字签名\) 是只有信息的发送者才能产生的，别人无法伪造的一段数字串。这段数字串同时也是对信息发送者发送信息真实性的有效证明。它是一种类似写在纸上的普通的物理签名，但是使用了公钥密码体制中的技术实现，用于鉴别数字信息。数字签名通常定义两种互补的运算：
 
 * 签名
 * 验证
@@ -28,15 +28,15 @@ description: '通过 OpenSSL 库以及一对公私钥，应用指定的摘要算
 
 ## 4.3 PKCS \#7
 
-[PKCS \(Public Key Cryptography Standards\) \#7](https://tools.ietf.org/html/rfc2315) 被命名为 [CMS](https://en.wikipedia.org/wiki/Cryptographic_Message_Syntax) \(Cryptographic Message Syntax Standard\)，是 [RSA 公司](https://www.rsa.com/) 提出的最著名的标准。这一标准也是 [S/MIME](https://en.wikipedia.org/wiki/S/MIME) \(Secure/Multipurpose Internet Mail Extensions\) 的基础。PKCS \#7 提供了一种用途广泛的创建数字签名的语法和格式，其中包含的信息有：
+[PKCS \(Public Key Cryptography Standards\) \#7](https://tools.ietf.org/html/rfc2315) 被命名为 [CMS](https://en.wikipedia.org/wiki/Cryptographic_Message_Syntax) \(Cryptographic Message Syntax Standard\)，是 [RSA 公司](https://www.rsa.com/) 提出的最著名的标准。这一标准也是 [S/MIME](https://en.wikipedia.org/wiki/S/MIME) \(Secure/Multipurpose Internet Mail Extensions\) 的基础。PKCS \#7 提供了一种用途广泛的 **创建数字签名的语法和格式**，其中包含的信息有：
 
-* 产生签名的 hash 算法
+* 生成摘要的 hash 算法
 * Detached / Attached 格式
 * 签名公钥证书
 * 签名者信息
 * 证书签发者信息
 * 认证属性 \(签名时间、消息摘要等\)
-* 加密算法
+* 签名加解密算法
 * 签名数据
 
 通过 [OpenSSL](https://www.openssl.org/) 工具可以查看一段数字签名的具体信息 \(以一个 ELF 文件的 `.text` section 的签名为例\)：

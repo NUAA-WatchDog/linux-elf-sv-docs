@@ -8,7 +8,10 @@ description: >-
 
 ## 5.1 签名数据存放位置
 
-想要将签名数据附在原有的 ELF 文件中，且不破坏 [ELF 的结构](../group-1-kernel-signature-verification/chapter-2-elf-format-analysis.md)，使其能够在没有签名验证机制的 OS 上也能运行，要么在 ELF 文件的尾部追加签名，要么在 ELF 文件的中间以符合 ELF 规范的方式添加若干个包含签名数据的 section。
+要将签名数据附在原有的 ELF 文件中，且不破坏 [ELF 的结构](../group-1-kernel-signature-verification/chapter-2-elf-format-analysis.md)，使其能够在没有签名验证机制的 OS 上也能运行，有两种可能的方式：
+
+* 在 ELF 文件的尾部追加签名
+* 在 ELF 文件的中间以符合 ELF 规范的方式添加若干个包含签名数据的 section
 
 在尾部追加签名的方式比较简单，但从文件整体视角来看，该文件已经不是一个符合 ELF 格式的文件了。如果我们需要对 ELF 文件的多个 section 进行签名，在文件末尾追加的方法将具有较差的可扩展性和灵活性。此外，将无法通过 `readelf` 或 `objdump` 等工具读取签名数据。
 
@@ -16,25 +19,25 @@ description: >-
 
 ## 5.2 将签名数据 section 注入 ELF 文件
 
-在 ELF 文件中，`.symtab` `.strtab` `.shstrtab` 三个 section 较为特殊。根据业界的习惯，通常将这三个 section 布局在 ELF 文件的最后三个 section。因此当我们想要在 ELF 文件中插入一个 section 时，应当把新插入的 section 恰好放置在这三个特殊 section 之前，如下图所示。这样做有两点好处：
+在 ELF 文件中，`.symtab` `.strtab` `.shstrtab` 三个 section 较为特殊。根据惯例，通常将这三个 section 布局为 ELF 文件的最后三个 section。如果我们想要在 ELF 文件中插入一个新的 section 时，应当把新插入的 section 恰好放置在这三个特殊 section 之前，如下图红色部分所示。这样做有两点好处：
 
-* 保持了 ELF 文件布局的业界习惯
+* 保持了 ELF 文件布局的惯例
 * 避免破坏 program header table 与其它 section 之间的引用关系
 
 ![&#x5728; ELF &#x6587;&#x4EF6;&#x4E2D;&#x6CE8;&#x5165;&#x4E00;&#x4E2A;&#x65B0;&#x7684; section](../.gitbook/assets/elf-new-section.png)
 
 基于这种方案，注入一个新的 section 涉及到对 ELF 文件多个部分的修改：
 
-* ELF header 中的变动
+* ELF header
   * Section header table 在文件中的偏移会被插入的内容向后挤
   * Section header table 中的 entry 数量将会增加
   * 新的 section 被插入在三个特殊 section 的前面，导致 ELF header 中指向 section header string table section 的索引增加
-* Section header table 中的变动
-  * Section header table 中将会多一个 entry，该 entry 指明新 section 在文件中的位置、长度、类型等信息
-  * 三个特殊 section 在文件中的位置信息、链接信息、长度信息等发生更新
-* Section header string table section 中的变动
-  * 新 section 的名称字符串将会插入到这个 section 中，引发该 section 的长度发生变化
-* Section 数据区域的变动
+* Section header table
+  * 新增一个 entry 指明新 section 在文件中的位置、长度、类型等信息
+  * 三个特殊 section 由于后移，entry 中的位置信息、链接信息、长度信息等发生更新
+* Section header string table section
+  * 新 section 的名称字符串插入到这个 section 中，引发该 section 的长度发生变化
+* Section 数据区域
   * 签名数据作为新的 section 被添加
 
 {% hint style="info" %}
@@ -47,9 +50,17 @@ description: >-
 * Section header table
 * Section header string table
 
-我们为 section header table 多分配了一块内存，并将三个特殊 section 在表中的 entry 向后移动，同时更新这三个 entry 中需要被修改的信息。然后我们在空出的 entry 中设置为新 section 的信息。
+我们为 section header table 多分配了一块内存，并将三个特殊 section 在表中的 entry 向后移动，同时更新这三个 entry 中需要被修改的信息。然后我们在空出的 entry 中为新增的 section 设置信息。
 
-在这一过程进行的同时，顺带计算在文件中需要注入字节的偏移位置与数量。将被注入文件的字节由三部分组成：
+在这一过程进行的同时，顺带计算在文件中需要注入字节的偏移位置与字节数。
+
+{% hint style="info" %}
+这里阐明文章中 **注入** 的概念。对于普通的文件写入，可被理解为从文件中的某个偏移位置开始 **覆盖** 文件中的原有内容，\(如果覆盖内容没有超出文件原有长度\) 将不会改变文件的长度。而注入特指在文件中插入内容，**将文件中插入位置之后的原有内容向后挤**，从而一定会引发文件长度的变化。
+
+对于文件中位置、长度固定，而内容需要被修改的部分，使用文件写入 \(比如 ELF header\)；对于文件中必须新增的数据，使用数据注入 \(比如签名数据\)。
+{% endhint %}
+
+将被注入文件的字节由三部分组成：
 
 * 签名数据
 * 签名 section 的名称字符串
@@ -65,18 +76,18 @@ description: >-
 
 在签名期间，签名程序会产生一些临时文件，用于保存被签名的若干个 section 对应的签名数据；在签名完成之后，这些临时文件将会被清除。
 
-对于一个名为 `elf`的 ELF 文件，在签名成功后，签名程序会保留未被签名的旧版本 ELF 文件 `elf.old` 作为备份，而注入签名后的新 ELF 文件将会被命名为原先的 `elf`。
+签名程序可以指定一个被签名文件名，以及一个可选的输出文件名。如果不指定输出文件名，对于一个名为 `elf`的 ELF 文件，在签名成功后，签名程序会保留未被签名的旧版本 ELF 文件 `elf.old` 作为备份，而注入签名后的新 ELF 文件将会被命名为原先的 `elf`。具体的使用方法参见 [后续](../group-3-usage/chapter-9-elf-sign.md#82-qian-ming-cheng-xu-de-shi-yong-fang-shi)。
 
 ## 5.3 兼容模式
 
-对于一些较为古老的 ELF 文件，比如 [GNU Coreutils](https://www.gnu.org/software/coreutils/)，其布局与较新的 GCC 编译器编译出的 ELF 文件的布局略有不同：
+对于一些 ELF 文件，比如 [GNU Core-utils](https://www.gnu.org/software/coreutils/)，其布局与较新 GCC 编译器编译出的 ELF 文件存在布局上的差异：
 
 * 不包含 `symbol table` 和 `string table` 两个 section
 * 只包含 `section header string table`。
 
 在签名程序中，我们提供了一个 `-c` 的选项，可以以 **兼容模式** 对 ELF 文件进行签名。在兼容模式下，签名数据 section 将会被加入到 `section header string table` 的前一个 section 位置：
 
-![&#x517C;&#x5BB9;&#x65E7;&#x7684; ELF &#x6587;&#x4EF6;&#x5E03;&#x5C40;](../.gitbook/assets/elf-new-section-compact.png)
+![&#x517C;&#x5BB9;&#x6A21;&#x5F0F;&#x7B7E;&#x540D;&#x540E;&#x7684; ELF &#x6587;&#x4EF6;&#x5E03;&#x5C40;](../.gitbook/assets/elf-new-section-compact.png)
 
 ## 5.4 参考资料
 
