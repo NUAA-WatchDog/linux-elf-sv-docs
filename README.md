@@ -13,7 +13,7 @@
 1. 用户空间下，基于摘要算法和非对称加密算法的 ELF 文件数字签名程序
 2. 内核空间下，基于内核密钥保留服务的 ELF 文件数据完整性验证机制
 
-上述两部分全部由 GNU C 语言实现，另外有少量用于审计、测试或方便使用的 Python/shell script。所有代码将在 [GNU General Public License \(GPL\)](https://www.gnu.org/licenses/gpl-3.0.html) 许可证的约束下开源。
+上述两部分全部由 GNU C 语言实现，另外有少量用于审计、测试或方便使用的 Python/shell script。所有代码将在 [MIT](https://www.mit-license.org/) 许可证的约束下开源。
 
 文档的后续内容主要介绍这两个部分的实现原理，以及使用说明。
 
