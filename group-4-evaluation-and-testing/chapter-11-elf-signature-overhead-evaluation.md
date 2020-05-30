@@ -32,5 +32,5 @@ ELF 签名程序所带来的开销主要来自于：
 * Section header table 中新的 section 项
 * Section header string table 中该 section 的名称字符串
 
-对于现代计算机的硬件来说，这个空间开销基本上可以忽略。规模越大的 ELF 文件，这个开销所占的百分比越小。
+对于现代计算机的硬件来说，这个空间开销基本上可以忽略。规模越大的 ELF 文件，这个开销所占的百分比越小。以 [chromium](http://www.chromium.org/) 的 ELF 为例 \(`/usr/lib/chromium/chromium`\)，签名前的程序大小为 134147808 字节 \(127.9333 MB\)，签名后的程序大小为 134148352 字节 \(127.9338 MB\)，产生的额外开销为 544 字节 \(0.0004%\)。
 
