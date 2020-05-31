@@ -32,8 +32,8 @@ version:        1.0
 description:    Binary handler for verifying signature in ELF section
 author:         zonghuaxiansheng <zonghuaxiansheng@outlook.com>
 author:         mrdrivingduck <mrdrivingduck@gmail.com>
-license:        GPL
-srcversion:     CC1A3573D45315BC963F5CE
+license:        Dual MIT/GPL
+srcversion:     24C778301DE1DD13C1BB3CF
 depends:
 name:           binfmt_elf_signature_verification
 vermagic:       4.15.0+ SMP mod_unload

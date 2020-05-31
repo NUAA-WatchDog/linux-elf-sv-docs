@@ -90,9 +90,9 @@ int verify_pkcs7_signature(const void *data, size_t len,
 
 ## 3.3 参考资料
 
-[Linux 密钥保留服务入门](https://www.ibm.com/developerworks/cn/linux/l-key-retention.html#artrelatedtopics)
+[IBM Developer - Linux 密钥保留服务入门](https://www.ibm.com/developerworks/cn/linux/l-key-retention.html#artrelatedtopics)
 
-[Kernel module signing facility](https://www.kernel.org/doc/html/v4.15/admin-guide/module-signing.html)
+[The Linux Kernel - Kernel module signing facility](https://www.kernel.org/doc/html/v4.15/admin-guide/module-signing.html)
 
 [Signature verification of kernel module and kexec](https://www.slideshare.net/joeylikernel/signature-verification-of-kernel-module-and-kexec)
 

@@ -108,7 +108,9 @@ and the digest algorithm specified by <hash-algo>. If no
 比如，用测试证书中的 RSA-2048 私钥与 SHA-256 摘要算法，对一个名为 `sign-target` 的 ELF 文件进行签名：
 
 ```bash
-$ ./elf-sign sha256 certs/kernel_key.pem certs/kernel_key.pem sign-target
+$ ./elf-sign sha256 \
+    certs/kernel_key.pem certs/kernel_key.pem \
+    sign-target
  --- 64-bit ELF file, version 1 (CURRENT).
  --- Little endian.
  --- 29 sections detected.
@@ -122,7 +124,9 @@ $ ./elf-sign sha256 certs/kernel_key.pem certs/kernel_key.pem sign-target
 对于布局中只有 section header string table 而没有 symbol table 和 string table 的 ELF 程序，使用 [兼容模式选项](../group-2-elf-signer/chapter-5-elf-signature-injection.md#53-jian-rong-mo-shi) `-c` 来进行签名：
 
 ```bash
-$ ./elf-sign -c sha256 certs/kernel_key.pem certs/kernel_key.pem /bin/cat mycat
+$ ./elf-sign -c sha256 \
+    certs/kernel_key.pem certs/kernel_key.pem \
+    /bin/cat mycat
  --- 64-bit ELF file, version 1 (CURRENT).
  --- Little endian.
  --- 30 sections detected.

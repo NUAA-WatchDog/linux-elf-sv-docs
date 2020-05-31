@@ -42,7 +42,8 @@ description: '通过 OpenSSL 库以及一对公私钥，应用指定的摘要算
 通过 [OpenSSL](https://www.openssl.org/) 工具可以查看一段数字签名的具体信息 \(以一个 ELF 文件的 `.text` section 的签名为例\)：
 
 ```bash
-$ openssl cms -inform der -in .text_sig -noout -cmsout -print
+$ openssl cms -inform der -in .text_sig \
+    -noout -cmsout -print
 CMS_ContentInfo:
   contentType: pkcs7-signedData (1.2.840.113549.1.7.2)
   d.signedData:
@@ -144,11 +145,11 @@ ELF 文件签名程序需要使用 OpenSSL [libcrypto](https://wiki.openssl.org/
 
 ## 4.5 参考资料
 
-[Manually signing modules](https://www.kernel.org/doc/html/latest/admin-guide/module-signing.html#manually-signing-modules)
+[The Linux Kernel - Manually signing modules](https://www.kernel.org/doc/html/latest/admin-guide/module-signing.html#manually-signing-modules)
 
-[PKCS \#7: Cryptographic Message Syntax Version 1.5](https://tools.ietf.org/html/rfc2315)
+[RFC 2315 - PKCS \#7: Cryptographic Message Syntax Version 1.5](https://tools.ietf.org/html/rfc2315)
 
-[Digital signature - Wikipedia](https://en.wikipedia.org/wiki/Digital_signature)
+[Wikipedia - Digital signature](https://en.wikipedia.org/wiki/Digital_signature)
 
 [What Is a Digital Signature?](https://www.instantssl.com/digital-signature)
 

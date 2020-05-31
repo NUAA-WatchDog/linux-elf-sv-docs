@@ -231,11 +231,11 @@ ELF 签名验证模块可能返回的错误原因：
 
 ## 1.6 参考资料
 
-[How programs get run](https://lwn.net/Articles/630727/)
+[LWN.net - How programs get run](https://lwn.net/Articles/630727/)
 
-[How does kernel get an executable binary file running under linux?](https://stackoverflow.com/questions/8352535/how-does-kernel-get-an-executable-binary-file-running-under-linux)
+[Stackoverflow - How does kernel get an executable binary file running under linux?](https://stackoverflow.com/questions/8352535/how-does-kernel-get-an-executable-binary-file-running-under-linux)
 
-[Playing with Binary Formats](https://www.linuxjournal.com/article/2568)
+[Linux Journal - Playing with Binary Formats](https://www.linuxjournal.com/article/2568)
 
-[Kernel Support for miscellaneous Binary Formats \(binfmt\_misc\)](https://www.kernel.org/doc/html/latest/admin-guide/binfmt-misc.html)
+[The Linux Kernel - Kernel Support for miscellaneous Binary Formats \(binfmt\_misc\)](https://www.kernel.org/doc/html/latest/admin-guide/binfmt-misc.html)
 
