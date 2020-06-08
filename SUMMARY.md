@@ -1,6 +1,7 @@
 # Table of contents
 
 * [Linux ELF 文件完整性保护解决方案](README.md)
+* [Solution for protecting integrity of Linux ELF files](solution-for-protecting-integrity-of-linux-elf-files.md)
 * [背景](background.md)
 * [运行环境与依赖](environment-and-dependencies.md)
 
@@ -12,7 +13,7 @@
 
 ## 第二部分 - ELF 文件签名程序 <a id="group-2-elf-signer"></a>
 
-* [Chapter 4 - 摘要与 PKCS \#7 签名](group-2-elf-signer/chapter-4-openssl.md)
+* [Chapter 4 - 信息摘要与 PKCS \#7 签名](group-2-elf-signer/chapter-4-openssl.md)
 * [Chapter 5 - ELF 签名注入](group-2-elf-signer/chapter-5-elf-signature-injection.md)
 
 ## 第三部分 - 使用方式 <a id="group-3-usage"></a>
