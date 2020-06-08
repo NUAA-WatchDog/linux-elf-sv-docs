@@ -2,7 +2,7 @@
 
 ## 作者
 
-张靖棠 \([@mrdrivingduck](https://github.com/mrdrivingduck)\)，南京航空航天大学，计算机科学与技术学院 / 人工智能学院，网络空间安全专业
+张靖棠 \([@mrdrivingduck](https://github.com/mrdrivingduck)\)，南京航空航天大学，计算机科学与技术学院，网络空间安全专业
 
 宗华 \([@zonghuaxiansheng](https://github.com/zonghuaxiansheng)\)，中国科学技术大学，计算机科学与技术学院，计算机技术专业
 
@@ -29,7 +29,9 @@
 数字签名的附加不能破坏原 ELF 文件的格式，尤其不能破坏会被操作系统使用的关键执行信息 \(指令、数据等\)。对于一个不检验 ELF 文件完整性的操作系统，也能够正常、正确地执行这个 ELF 文件。
 {% endhint %}
 
-代码仓库地址：[https://github.com/mrdrivingduck/linux-elf-binary-signer](https://github.com/mrdrivingduck/linux-elf-binary-signer)
+代码仓库地址：
+
+* ELF 二进制文件签名程序：[https://github.com/mrdrivingduck/linux-elf-binary-signer](https://github.com/mrdrivingduck/linux-elf-binary-signer)
 
 ### 内核 ELF 文件数据完整性验证机制
 
