@@ -2,7 +2,7 @@
 description: English version introduction.
 ---
 
-# Solution for protecting integrity of ELF files
+# System for protecting integrity of ELF files in Linux
 
 ## Author
 
