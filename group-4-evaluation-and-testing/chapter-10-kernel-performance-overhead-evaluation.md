@@ -4,7 +4,7 @@ description: 评估在内核中引入了签名验证机制后所带来的各类�
 
 # Chapter 10 - 内核签名验证开销评估
 
-## 9.1 开销分析
+## 10.1 开销分析
 
 我们的解决方案在内核为执行 ELF 文件进行准备的过程中，引入了额外的签名验证机制，从而引入了 CPU、内存、I/O 上的开销：
 
@@ -14,7 +14,7 @@ description: 评估在内核中引入了签名验证机制后所带来的各类�
 
 这里的开销主要分为两个维度：**时间** 上的开销，以及 **空间** 上的开销。
 
-## 9.2 时间开销
+## 10.2 时间开销
 
 我们评估了签名验证机制所带来的时间开销。具体地，评估带有签名验证机制的内核，在执行一个 ELF 文件前的准备工作中，比不进行签名验证的内核慢多少。
 
@@ -66,17 +66,17 @@ description: 评估在内核中引入了签名验证机制后所带来的各类�
 
 我们对测试结果进行了分析与解读：
 
-1. 没有签名验证的执行时间基本稳定在 90-100 μs，因为内核内置的 ELF 处理模块仅需要访问 ELF header 和 program header table，而 program header table 在布局上紧接 ELF header 之后，因此当内核将 ELF 的头 128 字节装入内存时，之后的 program header table 也已经位于内存的高速缓冲 \(buffer\) 中，访问时不再需要额外的 I/O 开销
-2. 加入签名验证机制后，`execve` 系统调用的执行时间与代码段长度相关 - 比如 `tar` 程序的代码段特别长，因此需要更长的时间分配内存、计算代码段摘要
+1. 没有签名验证的执行时间基本稳定在 90-100 μs，因为内核内置的 ELF 处理模块仅需要访问 ELF header 和 program header table，而 program header table 在布局上紧接 ELF header 之后，因此当内核将 ELF 的头 128 字节装入主存时，紧接其后的 program header table 也已经位于主存 **高速缓冲 \(buffer\)** 中，访问时不再需要额外的 I/O 开销
+2. 加入签名验证机制后，`execve` 系统调用的执行时间与程序代码段长度相关 - 比如 `tar` 程序的代码段特别长，因此需要更长的时间分配内存、计算代码段摘要
 3. 加入签名验证机制后，`execve` 系统调用的执行时间平均翻了 5 - 7 倍，主要原因是将 ELF 文件的 section header table、section header string table、签名 section 与被签名 section 载入内存引入了额外的 I/O 开销。由于 `execve` 系统调用原本就能够在 90-100 μs 左右的时间内结束，是一个相对较快的过程；而额外的 I/O 操作会将 `execve` 系统调用的执行时间提升至少半个数量级，因为 I/O 的速度远比内存慢
 
-## 9.3 空间开销
+## 10.3 空间开销
 
 这里主要关注内核为待验证的 ELF section 所动态分配的内存空间。由于内存空间会在使用完毕后被回收，这里只关心动态分配内存空间的 **极限值**。即，内核最大能够支持分配多大的内存将一个 ELF section 装入内存进行验证。
 
 在所有目前经过测试的程序中，具有最长的 `.text` section 的 ELF 文件为 [chromium](http://www.chromium.org/Home) \(Version 71.0.3578.80, Developer Build, 64-bit, deepin 15.11 x64\)。该 ELF 文件的大小为 134147808 字节 \(127.9333 MB\)，其中，`.text` section 的长度为 80549925 字节 \(76.8184 MB\)。ELF 数字签名验证模块成功地验证了其中的数字签名。
 
-## 9.4 参考资料
+## 10.4 参考资料
 
 [Wikipedia - Copy-on-write](https://en.wikipedia.org/wiki/Copy-on-write)
 

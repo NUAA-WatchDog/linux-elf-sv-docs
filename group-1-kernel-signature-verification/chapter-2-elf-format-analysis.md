@@ -4,7 +4,7 @@ description: 通过对 ELF 文件的格式进行分析，内核中的 ELF 签名
 
 # Chapter 2 - ELF 文件格式分析
 
-## 2.1 关于 ELF
+## 2.1 关于 ELF 格式
 
 **可执行与可链接格式** \(Executable and Linkable Format, ELF\) 是一种可执行文件、目标代码、共享库、核心转储文件的通用标准文件格式。ELF 标准最早发布于一个名为 System V Release 4 \(SVR4\) 的 Unix 操作系统版本的应用二进制接口 \(Application Binary Interface, ABI\) 标准规范中，并迅速被各大 Unix 版本所接受。1999 年，ELF 格式被选为 Unix 或类 Unix 系统在 x86 处理器平台上的标准二进制文件格式。
 
@@ -49,7 +49,7 @@ Section header table 中并不存储每个 section 的名称。所有 section �
 
 其次，根据 ELF header 中指示的 section header table 的位置、条目个数、每个条目的大小，可以将 section header table 读入内存；根据 ELF header 中指示的 section header string table 的索引，以及已经读入内存的 section header table，可以将 section header string table 读入内存。
 
-![ELF &#x6587;&#x4EF6;&#x5E03;&#x5C40;](../.gitbook/assets/elf-layout.png)
+![ELF &#x6587;&#x4EF6;&#x4E2D;&#x7684;&#x7ED3;&#x6784;&#x5E03;&#x5C40;](../.gitbook/assets/elf-layout.png)
 
 同时遍历 section header table \(每个 section 的描述信息\) 和 section header string table \(每个 section 的名称\)，可以定位到与签名程序约定好的签名信息 section 与被签名 section，如：
 

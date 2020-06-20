@@ -14,7 +14,7 @@
 ## 第二部分 - ELF 文件签名程序 <a id="group-2-elf-signer"></a>
 
 * [Chapter 4 - 信息摘要与 PKCS \#7 签名](group-2-elf-signer/chapter-4-openssl.md)
-* [Chapter 5 - ELF 签名注入](group-2-elf-signer/chapter-5-elf-signature-injection.md)
+* [Chapter 5 - 将签名数据注入 ELF 文件](group-2-elf-signer/chapter-5-elf-signature-injection.md)
 
 ## 第三部分 - 使用方式 <a id="group-3-usage"></a>
 
@@ -27,4 +27,8 @@
 
 * [Chapter 10 - 内核签名验证开销评估](group-4-evaluation-and-testing/chapter-10-kernel-performance-overhead-evaluation.md)
 * [Chapter 11 - ELF 签名开销评估](group-4-evaluation-and-testing/chapter-11-elf-signature-overhead-evaluation.md)
+
+## 后记
+
+* [后记](hou-ji/hou-ji.md)
 

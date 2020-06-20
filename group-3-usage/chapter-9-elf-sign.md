@@ -4,7 +4,7 @@ description: 使用 ELF 文件签名程序，对一个未被签名的 ELF 文件
 
 # Chapter 9 - ELF 签名
 
-## 8.1 ELF 文件签名程序的构建
+## 9.1 ELF 文件签名程序的构建
 
 首先，需要安装签名程序依赖的库。基于 Debian 系列的 Linux 发行版可以使用 **APT** \(Advanced Package Tool\) 工具轻易安装这些依赖：
 
@@ -23,7 +23,7 @@ cc -o sign-target sign_target.c
  --- Little endian.
  --- 29 sections detected.
  --- Section 0014 [.text] detected.
- --- Length of section [.text]: 10192
+ --- Length of section [.text]: 8752
  --- Signature size of [.text]: 465
  --- Writing signature to file: .text_sig
  --- Removing temp signature file: .text_sig
@@ -32,7 +32,7 @@ cc -o sign-target sign_target.c
 {% hint style="info" %}
 由于自行构建得到的 `elf-sign` 也是一个 ELF 程序，因此，在它可以用于对其它 ELF 文件进行签名之前，其自身必须先被签名，否则内核将拒绝执行这个 ELF 程序。在仓库中，我们提供了一个已经被测试密钥 \(`certs/kernel_key.pem`\) 签名后的签名程序 `elf-sign.signed`，并用这个签名程序对 `make` 命令构建的 `elf-sign` 进行签名。
 
-如果您自行生成了私钥与公钥证书，那么您可能需要在一个 **没有 ELF 签名验证机制** 且 **确认安全** 的内核上，对自行构建得到的 `elf-sign` 进行自签名。然后，这个被签名后的签名程序可以使用在具有 ELF 签名验证机制的内核上。
+如果您自行生成了私钥与公钥证书，那么您可能需要在一个 **未装载 ELF 签名验证模块** 且 **确认安全** 的内核上，对自行构建得到的 `elf-sign` 进行自签名。然后，这个被签名后的签名程序可以使用在装载 ELF 签名验证模块的内核上。
 {% endhint %}
 
 如果一切正常，通过 `readelf` 或 `objdump` 命令，可以在构建成功的 `elf-sign` 中看到名为 `.text_sig` 的 section；而签名前被备份的原始版本 ELF 文件 `elf-sign.old` 中则没有这个 section：
@@ -40,8 +40,8 @@ cc -o sign-target sign_target.c
 ```bash
 $ readelf -a elf-sign
 ...
-  [26] .text_sig         PROGBITS         0000000000000000  00004039
-       00000000000001d1  0000000000000000           0     0     1
+  [29] .text_sig         PROGBITS         0000000000000000  00006cb0
+       00000000000001d1  0000000000000000   O       0     0     8
 ...
 ```
 
@@ -82,30 +82,29 @@ Contents of section .text_sig:
  ...
 ```
 
-## 8.2 签名程序的使用方式
+## 9.2 签名程序的使用方式
 
 ```bash
 $ ./elf-sign
-Usage: elf-sign [-ch] <hash-algo> <key> <x509> <elf-file> [<dest-file>]
-  -c,         compact signing mode for old ELF binary
+Usage: elf-sign [-h] <hash-algo> <key> <x509> <elf-file> [<dest-file>]
   -h,         display the help and exit
 
 Sign the <elf-file> to an optional <dest-file> with
 private key in <key> and public key certificate in <x509>
-and the digest algorithm specified by <hash-algo>. If no
-<dest-file> is specified, the <elf-file> will be backup to
+and the digest algorithm specified by <hash-algo>. If no 
+<dest-file> is specified, the <elf-file> will be backup to 
 <elf-file>.old, and the original <elf-file> will be signed.
 ```
 
 `elf-sign` 的参数含义：
 
-1. `hash-algo` - 摘要算法 \(可以选用其它内核内置支持的摘要算法\)
+1. `hash-algo` - 摘要算法 \(可以选用其它 [内核支持的摘要算法](https://www.kernel.org/doc/html/v4.15/admin-guide/module-signing.html#configuring-module-signing)\)
 2. `key` - 存放用于签名的私钥的文件路径
 3. `x509` - 存放用于签名的公钥证书的文件路径
 4. `elf-file` - 待签名的目标 ELF 文件
 5. `dest-file` \(可选\) - 签名后的输出文件名
 
-比如，用测试证书中的 RSA-2048 私钥与 SHA-256 摘要算法，对一个名为 `sign-target` 的 ELF 文件进行签名：
+比如，用测试证书中的 RSA-2048 私钥与 SHA-256 摘要算法，对一个名为 `sign-target` 的 ELF 文件进行直接签名：
 
 ```bash
 $ ./elf-sign sha256 \
@@ -121,23 +120,23 @@ $ ./elf-sign sha256 \
  --- Removing temp signature file: .text_sig
 ```
 
-对于布局中只有 section header string table 而没有 symbol table 和 string table 的 ELF 程序，使用 [兼容模式选项](../group-2-elf-signer/chapter-5-elf-signature-injection.md#53-jian-rong-mo-shi) `-c` 来进行签名：
+或将一个已有的 ELF 文件 \(`/bin/ls`\) 签名为一个自定义文件名的 ELF 文件 \(`myls`\)：
 
 ```bash
-$ ./elf-sign -c sha256 \
+$ ./elf-sign sha256 \
     certs/kernel_key.pem certs/kernel_key.pem \
-    /bin/cat mycat
+    /bin/ls myls
  --- 64-bit ELF file, version 1 (CURRENT).
  --- Little endian.
- --- 30 sections detected.
+ --- 28 sections detected.
  --- Section 0014 [.text] detected.
- --- Length of section [.text]: 16569
+ --- Length of section [.text]: 74969
  --- Signature size of [.text]: 465
  --- Writing signature to file: .text_sig
  --- Removing temp signature file: .text_sig
 ```
 
-## 8.3 参考资料
+## 9.3 参考资料
 
 [Manually signing modules](https://www.kernel.org/doc/html/latest/admin-guide/module-signing.html#manually-signing-modules)
 
