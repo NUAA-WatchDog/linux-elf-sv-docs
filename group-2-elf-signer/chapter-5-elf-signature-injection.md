@@ -23,13 +23,13 @@ description: >-
 
 1. 插入一个包含签名数据的新 section 数据区
 2. Section header table 中应多出一个新的 entry 来描述签名数据在文件中的偏移和长度
-3. 将新 section 的名称字符串添加到 `.shstrtab` 中，`.shstrtab` 的长度需要被修改
-4. 数据插入位置之后的所有 section 的偏移地址都需要被后移修正
+3. 将新 section 的名称字符串添加到 `.shstrtab` 中，并更新该 section 的长度
+4. 数据插入位置之后的所有 section 的偏移地址都需要被后移更新
 5. 在 ELF header 中更新 section header table 的偏移位置和元素数量
 
-另外，还需要保证数据插入后，所有 section 的地址对齐要求得到满足，section header table 的起始地址也需要对齐 8 字节地址，以充分利用总线宽度提升性能。
+另外，还需要保证数据插入后，所有 section 的地址对齐要求得到满足。Section header table 的起始地址也需要对齐 8 字节地址，以充分利用总线宽度提升性能。
 
-由于 ELF 文件的布局方式因编译器而异，数据插入后，ELF 文件可能的布局如下图所示。其中，红色部分为新插入的数字签名信息及其相关的描述信息：
+由于 ELF 文件的布局方式因编译器而异，注入签名数据后，ELF 文件可能的布局如下图所示。其中，红色部分为新插入的数字签名信息及其相关的描述信息：
 
 ![&#x6CE8;&#x5165;&#x7B7E;&#x540D;&#x540E;&#x7684; ELF &#x6587;&#x4EF6;](../.gitbook/assets/elf-new-section.png)
 
@@ -38,7 +38,7 @@ description: >-
 * ELF header
 * Section header table
 
-我们为 section header table 多分配了一段 section header entry 的内存，并在最后一个空出的 entry 中为新增的 section 设置信息。程序会将签名数据插入到从文件末尾开始的第一个能被 8 整除的地址，作为新增 section 的数据。这个 **地址** 以及 **签名数据的长度** 被记录到最后一个 section header entry 对应的结构体中。在这一过程进行的同时，程序顺带计算在文件中需要插入的字节偏移位置与字节数量。
+我们为 section header table 多分配了一段 section header entry 的内存，并在最后一个空出的 entry 中为新增的数字签名 section 设置信息。程序会将签名数据插入到从文件末尾开始的第一个能被 8 整除的地址，作为新增 section 的数据。这个 **地址** 以及 **签名数据的长度** 被记录到最后一个 section header entry 对应的结构体中。在这一过程进行的同时，程序顺带计算在文件中需要插入的字节偏移位置与字节数量。
 
 {% hint style="info" %}
 这里阐明文章中 **插入** 和 **覆盖** 的概念。对于普通的文件写入，可被理解为从文件中的某个偏移位置开始 **覆盖** 文件中的原有内容，\(如果覆盖内容没有超出文件原有长度\) 将不会改变文件的长度。而插入特指 **将插入位置之后的原有内容向后挤**，从而一定会引发文件长度的变化。
@@ -53,10 +53,12 @@ description: >-
 
 基于上述工作，签名程序能够确定 ELF header 中记录的 section header table 偏移量 \(`e_shoff`\) 和 section header 数量 \(`e_shnum`\) 的最终值。另外，通过遍历 section header table，程序还可以确定在 `.shstrtab` 中插入新 section 名称字符串的位置，以及用于使插入位置之后所有 ELF 结构的地址对齐的填充字节个数。
 
-最终，程序将内存中的 ELF header 副本与 section header table 副本 \(不包含新增 entry\) 中的偏移量修正后，覆盖原文件中的相同部分；然后，在计算好的文件偏移处插入准备好的数据。
+程序将内存中的 ELF header 副本与 section header table 副本 \(不包含新增 entry\) 中的偏移量修正后，覆盖原文件中的相同部分；然后，在计算好的文件偏移处插入准备好的数据。
 
 {% hint style="info" %}
-在插入数据时，应当先处理在文件中插入位置靠后的数据。如果先处理在文件中插入位置靠前的数据，将会影响到之后插入的数据在文件中的插入偏移位置。也就是说，插入的顺序与具体的 ELF 结构无关，只和 ELF 结构在文件中的偏移位置有关，插入位置靠后的数据先被插入。
+在插入数据时，应当先处理在文件中插入位置靠后的数据。如果先处理在文件中插入位置靠前的数据，将会影响到之后插入的数据在文件中的插入偏移位置。
+
+也就是说，插入的顺序与具体的 ELF 结构无关，只和 ELF 结构在文件中的偏移位置有关，插入位置靠后的数据先被插入。
 {% endhint %}
 
 签名程序会在被签名 section 名称的基础上加上 `_sig` 后缀，成为对应的签名数据 section。如，对于保存 ELF 程序指令的 `.text` section，签名程序会将签名数据作为一个名为 `.text_sig` 的 section 附加到 ELF 文件中。如果在解析 ELF section 的过程中发现已经存在名称以 `_sig` 为后缀的 section，则签名程序会中止退出，以防止重复签名。

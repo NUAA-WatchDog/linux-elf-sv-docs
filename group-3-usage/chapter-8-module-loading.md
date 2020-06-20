@@ -6,7 +6,7 @@ description: 在内核启动后，手动挂载 ELF 签名验证模块。
 
 ## 8.1 编译模块
 
-在 [模块源代码仓库](https://github.com/mrdrivingduck/linux-kernel-elf-sig-verify-module) 中，我们提供了 `Makefile` 用于编译该模块。编译模块时，需要使用到相对应的内核源代码目录。`Makefile` 中默认使用 **系统当前内核源码** 的路径 \(当然也可以指定其它的内核源码路径\)。
+在 [模块源代码仓库](https://github.com/mrdrivingduck/linux-kernel-elf-sig-verify-module) 中，我们提供了 `Makefile` 用于编译该模块。编译模块时，需要使用到相对应的内核源代码目录。`Makefile` 中默认使用 **系统当前内核** 的源码路径 \(当然也可以指定其它的内核源码路径\)。
 
 ```bash
 $ make
@@ -39,16 +39,16 @@ name:           binfmt_elf_signature_verification
 vermagic:       4.15.0+ SMP mod_unload
 ```
 
-使用 `insmod` 命令挂载模块：
+使用 `insmod` 命令装载模块：
 
 ```bash
 $ sudo insmod binfmt_elf_signature_verification.ko
 ```
 
 {% hint style="info" %}
-如果内核中的模块签名验证选项 \(`CONFIG_MODULE_SIG`\) 被开启，则内核会在挂载模块之前，验证模块中的数字签名。如果模块签名验证失败，内核将会被标记为 tainted \(被污染\)。
+如果内核中的模块签名验证选项 \(`CONFIG_MODULE_SIG`\) 被开启，则内核会在装载模块之前，验证模块中的数字签名。如果模块签名验证失败，内核将会被标记为 tainted \(被污染\)。
 
-因此，在挂载模块之前，需要使用内核源码树下的 `scripts/sign-file` 手动对模块进行签名。更多信息可见：[https://www.kernel.org/doc/html/v4.15/admin-guide/module-signing.html\#configuring-module-signing](https://www.kernel.org/doc/html/v4.15/admin-guide/module-signing.html#configuring-module-signing)
+因此，在装载模块之前，需要使用内核源码树下的 `scripts/sign-file` 手动对模块进行签名。更多信息可见：[https://www.kernel.org/doc/html/v4.15/admin-guide/module-signing.html\#configuring-module-signing](https://www.kernel.org/doc/html/v4.15/admin-guide/module-signing.html#configuring-module-signing)
 {% endhint %}
 
 使用 `lsmod` 命令确认模块是否被装载：

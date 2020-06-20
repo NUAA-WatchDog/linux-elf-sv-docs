@@ -32,7 +32,7 @@ cc -o sign-target sign_target.c
 {% hint style="info" %}
 由于自行构建得到的 `elf-sign` 也是一个 ELF 程序，因此，在它可以用于对其它 ELF 文件进行签名之前，其自身必须先被签名，否则内核将拒绝执行这个 ELF 程序。在仓库中，我们提供了一个已经被测试密钥 \(`certs/kernel_key.pem`\) 签名后的签名程序 `elf-sign.signed`，并用这个签名程序对 `make` 命令构建的 `elf-sign` 进行签名。
 
-如果您自行生成了私钥与公钥证书，那么您可能需要在一个 **未挂载 ELF 签名验证模块** 且 **确认安全** 的内核上，对自行构建得到的 `elf-sign` 进行自签名。然后，这个被签名后的签名程序可以使用在挂载 ELF 签名验证模块的内核上。
+如果您自行生成了私钥与公钥证书，那么您可能需要在一个 **未装载 ELF 签名验证模块** 且 **确认安全** 的内核上，对自行构建得到的 `elf-sign` 进行自签名。然后，这个被签名后的签名程序可以使用在装载 ELF 签名验证模块的内核上。
 {% endhint %}
 
 如果一切正常，通过 `readelf` 或 `objdump` 命令，可以在构建成功的 `elf-sign` 中看到名为 `.text_sig` 的 section；而签名前被备份的原始版本 ELF 文件 `elf-sign.old` 中则没有这个 section：
@@ -98,13 +98,13 @@ and the digest algorithm specified by <hash-algo>. If no
 
 `elf-sign` 的参数含义：
 
-1. `hash-algo` - 摘要算法 \(可以选用其它内核内置支持的摘要算法\)
+1. `hash-algo` - 摘要算法 \(可以选用其它 [内核支持的摘要算法](https://www.kernel.org/doc/html/v4.15/admin-guide/module-signing.html#configuring-module-signing)\)
 2. `key` - 存放用于签名的私钥的文件路径
 3. `x509` - 存放用于签名的公钥证书的文件路径
 4. `elf-file` - 待签名的目标 ELF 文件
 5. `dest-file` \(可选\) - 签名后的输出文件名
 
-比如，用测试证书中的 RSA-2048 私钥与 SHA-256 摘要算法，对一个名为 `sign-target` 的 ELF 文件进行签名：
+比如，用测试证书中的 RSA-2048 私钥与 SHA-256 摘要算法，对一个名为 `sign-target` 的 ELF 文件进行直接签名：
 
 ```bash
 $ ./elf-sign sha256 \
@@ -120,7 +120,7 @@ $ ./elf-sign sha256 \
  --- Removing temp signature file: .text_sig
 ```
 
-将一个已有的 ELF 文件 \(`/bin/ls`\) 签名为一个自定义名称的 ELF 文件 \(`myls`\)：
+或将一个已有的 ELF 文件 \(`/bin/ls`\) 签名为一个自定义文件名的 ELF 文件 \(`myls`\)：
 
 ```bash
 $ ./elf-sign sha256 \
