@@ -64,7 +64,7 @@ binfmt_elf_signature_verification    16384  0
 $ sudo rmmod binfmt_elf_signature_verification
 ```
 
-## 参考资料
+## 8.3 参考资料
 
 [Stackoverflow - How to compile a kernel module](https://stackoverflow.com/questions/37507320/how-to-compile-a-kernel-module)
 
