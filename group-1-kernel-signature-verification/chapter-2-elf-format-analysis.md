@@ -49,7 +49,7 @@ Section header table 中并不存储每个 section 的名称。所有 section �
 
 其次，根据 ELF header 中指示的 section header table 的位置、条目个数、每个条目的大小，可以将 section header table 读入内存；根据 ELF header 中指示的 section header string table 的索引，以及已经读入内存的 section header table，可以将 section header string table 读入内存。
 
-![](../.gitbook/assets/elf-layout.png)
+![ELF &#x6587;&#x4EF6;&#x4E2D;&#x7684;&#x7ED3;&#x6784;&#x5E03;&#x5C40;](../.gitbook/assets/elf-layout.png)
 
 同时遍历 section header table \(每个 section 的描述信息\) 和 section header string table \(每个 section 的名称\)，可以定位到与签名程序约定好的签名信息 section 与被签名 section，如：
 
