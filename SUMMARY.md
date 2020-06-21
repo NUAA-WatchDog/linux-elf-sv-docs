@@ -27,7 +27,7 @@
 
 * [Chapter 10 - 内核签名验证开销评估](group-4-evaluation-and-testing/chapter-10-kernel-performance-overhead-evaluation.md)
 * [Chapter 11 - ELF 签名开销评估](group-4-evaluation-and-testing/chapter-11-elf-signature-overhead-evaluation.md)
-* [Chapter 12 - 适配不同的 ELF 文件布局](group-4-evaluation-and-testing/chapter-12-signer-layout-adaptive.md)
+* [Chapter 12 - 适配不同的 ELF 文件布局](group-4-evaluation-and-testing/chapter-12-elf-layout-adaptive.md)
 
 ## 后记 <a id="group-5-backscript"></a>
 
