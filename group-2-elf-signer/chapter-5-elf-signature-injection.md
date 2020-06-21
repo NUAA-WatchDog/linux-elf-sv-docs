@@ -29,7 +29,7 @@ description: >-
 
 另外，还需要保证数据插入后，所有 section 的地址对齐要求得到满足。Section header table 的起始地址也需要对齐 8 字节地址，以充分利用总线宽度提升性能。
 
-由于 ELF 文件的布局方式因编译器而异，注入签名数据后，ELF 文件可能的布局如下图所示。其中，红色部分为新插入的数字签名信息及其相关的描述信息：
+由于 ELF 文件的布局方式因编译器而异，在 [签名程序的代码仓库](https://github.com/mrdrivingduck/linux-elf-binary-signer/tree/master/test/func) 中，保存了 GCC 编译出的 ELF 示例文件与 [Golang](https://golang.org/) 编译出的 ELF 示例文件。因此，在注入签名数据后，ELF 文件可能的布局如下图所示。其中，红色部分为新插入的数字签名信息及其相关的描述信息：
 
 ![&#x6CE8;&#x5165;&#x7B7E;&#x540D;&#x540E;&#x7684; ELF &#x6587;&#x4EF6;](../.gitbook/assets/elf-new-section.png)
 

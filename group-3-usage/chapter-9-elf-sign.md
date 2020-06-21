@@ -17,7 +17,6 @@ $ sudo apt install libssl-dev
 ```bash
 $ make
 cc -o elf-sign elf_sign.c -lcrypto
-cc -o sign-target sign_target.c
 ./elf-sign.signed sha256 certs/kernel_key.pem certs/kernel_key.pem elf-sign
  --- 64-bit ELF file, version 1 (CURRENT).
  --- Little endian.
@@ -104,12 +103,12 @@ and the digest algorithm specified by <hash-algo>. If no
 4. `elf-file` - 待签名的目标 ELF 文件
 5. `dest-file` \(可选\) - 签名后的输出文件名
 
-比如，用测试证书中的 RSA-2048 私钥与 SHA-256 摘要算法，对一个名为 `sign-target` 的 ELF 文件进行直接签名：
+比如，用测试证书中的 RSA-2048 私钥与 SHA-256 摘要算法，对仓库中的示例 ELF 文件进行签名：
 
 ```bash
 $ ./elf-sign sha256 \
     certs/kernel_key.pem certs/kernel_key.pem \
-    sign-target
+    test/func/hello-golang hello-golang
  --- 64-bit ELF file, version 1 (CURRENT).
  --- Little endian.
  --- 29 sections detected.
@@ -136,7 +135,7 @@ $ ./elf-sign sha256 \
  --- Removing temp signature file: .text_sig
 ```
 
-## 9.3 参考资料
+## 9.4 参考资料
 
 [Manually signing modules](https://www.kernel.org/doc/html/latest/admin-guide/module-signing.html#manually-signing-modules)
 
