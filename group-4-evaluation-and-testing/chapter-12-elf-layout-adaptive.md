@@ -117,7 +117,7 @@ There are no section groups in this file.
 ...
 ```
 
-## 12.3 ELF by Golang
+## 12.3 ELF by [Golang](https://golang.org/)
 
 上述目录中的 `hello-golang` 是一个由极其简单的 Go 程序编译后得到的 ELF 文件：
 
