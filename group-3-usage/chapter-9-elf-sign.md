@@ -22,7 +22,7 @@ cc -o elf-sign elf_sign.c -lcrypto
  --- Little endian.
  --- 29 sections detected.
  --- Section 0014 [.text] detected.
- --- Length of section [.text]: 8752
+ --- Length of section [.text]: 9200
  --- Signature size of [.text]: 465
  --- Writing signature to file: .text_sig
  --- Removing temp signature file: .text_sig
@@ -111,9 +111,9 @@ $ ./elf-sign sha256 \
     test/func/hello-golang hello-golang
  --- 64-bit ELF file, version 1 (CURRENT).
  --- Little endian.
- --- 29 sections detected.
- --- Section 0014 [.text] detected.
- --- Length of section [.text]: 418
+ --- 23 sections detected.
+ --- Section 0001 [.text] detected.
+ --- Length of section [.text]: 528699
  --- Signature size of [.text]: 465
  --- Writing signature to file: .text_sig
  --- Removing temp signature file: .text_sig
