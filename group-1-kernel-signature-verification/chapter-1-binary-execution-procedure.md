@@ -67,8 +67,8 @@ struct linux_binprm {
 {% code title="include/linux/binfmts.h" %}
 ```c
 /*
- * This structure defines the functions that are used to load the binary formats that
- * linux accepts.
+ * This structure defines the functions that are used to
+ * load the binary formats that linux accepts.
  */
 struct linux_binfmt {
     struct list_head lh;

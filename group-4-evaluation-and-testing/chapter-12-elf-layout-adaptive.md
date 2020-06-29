@@ -11,7 +11,8 @@ ELF 文件的布局因编译器不同而大相径庭。由于签名程序需要�
 ```c
 #include <stdio.h>
 
-int main() {
+int main()
+{
     printf("Hello world\n");
     return 0;
 }
