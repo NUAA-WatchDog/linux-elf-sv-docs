@@ -80,7 +80,7 @@ description: 评估在内核中引入了签名验证机制后所带来的各类�
 
 [Wikipedia - Copy-on-write](https://en.wikipedia.org/wiki/Copy-on-write)
 
-[Mr Dk.'s blog - linux-kernel-comments-notes/Chapter 12 - 文件系统/Chapter 12.15 - exec.c 程序](https://github.com/mrdrivingduck/linux-kernel-comments-notes/blob/master/Chapter%2012%20-%20%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/Chapter%2012.15%20-%20exec.c%20%E7%A8%8B%E5%BA%8F.md)
+[Mr Dk.'s blog - linux-kernel-comments-notes/Chapter 12 - 文件系统/Chapter 12.15 - exec.c 程序](https://mrdrivingduck.github.io/blog/#/markdown?repo=linux_kernel_comments_notes&path=Chapter%2012%20-%20%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%2FChapter%2012.19%20-%20select.c%20%E7%A8%8B%E5%BA%8F.md)
 
 [Stackoverflow - Does Linux load program-pages on demand?](https://stackoverflow.com/questions/19292744/does-linux-load-program-pages-on-demand)
 

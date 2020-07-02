@@ -58,11 +58,31 @@ writing new private key to 'kernel_key.pem'
 我们在 [**内核源代码仓库**](https://github.com/mrdrivingduck/linux-kernel-elf-sig-verify) 与 [**签名程序代码仓库**](https://github.com/mrdrivingduck/linux-elf-binary-signer) 放置了同一个 PEM 文件，其中的公私钥仅用于测试，请不要在生产环境中直接使用。[暴露私钥会导致所有的机制失效](https://www.kernel.org/doc/html/v4.15/admin-guide/module-signing.html#administering-protecting-the-private-key)。
 {% endhint %}
 
-## 6.3 参考资料
+## 6.3 Let's Encrypt 密钥与证书
+
+[Let's Encrypt](https://letsencrypt.org/) 是一个由非营利性组织 - 互联网安全研究小组 \(ISRG\) 提供的免费、自动化和开放的证书颁发机构 \(CA\)，能够为网站提供免费的 [SSL/TLS](https://en.wikipedia.org/wiki/Transport_Layer_Security) 数字证书，以促进 Web 的安全化发展。要从 Let’s Encrypt 获取网站域名的证书，用户必须证明对域名的实际控制权，并在 Web 主机上运行使用 ACME 协议的软件来获取 Let’s Encrypt 证书。
+
+Let's Encrypt 官方推荐的证书签发工具是 [Certbot](https://certbot.eff.org/)。只需要满足以下三个要求，该工具就能自动为用户生成三个月后过期的数字公钥证书与私钥，并配置一个 cron 定时任务在证书过期前自动刷新证书：
+
+1. 一台开放 `80` 端口的服务器
+2. 一个合法域名，且已被 [DNS](https://en.wikipedia.org/wiki/Domain_Name_System) 解析到该服务器
+3. 用户对该服务器有 `sudo` 控制权
+
+经过测试，Let's Encrypt 签发的公钥证书 `cert.pem` 和私钥 `privkey.pem` 完全能够在本解决方案中使用。用户只需要将公钥证书 [与内核一起编译](chapter-7-kernel-compilation.md)，再 [使用公钥证书与私钥共同对 ELF 进行签名](chapter-9-elf-sign.md) 即可。
+
+## 6.4 参考资料
 
 [OpenSSL 命令 - req](https://www.iteye.com/blog/ctwen-2028630)
 
 [Generating signing keys](https://www.kernel.org/doc/html/v4.15/admin-guide/module-signing.html#generating-signing-keys)
 
 [Administering/protecting the private key](https://www.kernel.org/doc/html/v4.15/admin-guide/module-signing.html#administering-protecting-the-private-key)
+
+[About Certbot](https://certbot.eff.org/about/)
+
+[GitHub - certbot](https://github.com/certbot/certbot)
+
+[Let's Encrypt](https://letsencrypt.org/)
+
+[Mr Dk.'s blog - notes/Cryptography - Let's Encrypt](https://mrdrivingduck.github.io/blog/#/markdown?repo=notes&path=Cryptography%2FCryptography%20Let%27s%20Encrypt.md)
 
