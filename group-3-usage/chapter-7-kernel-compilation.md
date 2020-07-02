@@ -6,7 +6,7 @@ description: 把用于 ELF 文件签名验证的公钥证书作为系统信任�
 
 ## 7.1 内核编译配置
 
-在 Linux 内核编译配置 `.config` 中，提供了 `SYSTEM_TRUST_KEYS` 的编译选项。其描述如下：
+在 Linux 内核编译配置 `.config` 中，提供了 `SYSTEM_TRUSTED_KEYS` 的编译选项。其描述如下：
 
 {% code title="certs/Kconfig" %}
 ```text
