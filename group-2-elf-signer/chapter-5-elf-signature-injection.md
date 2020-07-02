@@ -29,11 +29,17 @@ description: >-
 
 另外，还需要保证数据插入后，所有 section 的地址对齐要求得到满足。Section header table 的起始地址也需要对齐 8 字节地址，以充分利用总线宽度提升性能。
 
-由于 ELF 文件的布局方式因编译器而异，在 [签名程序的代码仓库](https://github.com/mrdrivingduck/linux-elf-binary-signer/tree/master/test/func) 中，保存了 GCC 编译出的 ELF 示例文件与 [Golang](https://golang.org/) 编译出的 ELF 示例文件。因此，在注入签名数据后，ELF 文件可能的布局如下图所示。其中，红色部分为新插入的数字签名信息及其相关的描述信息：
+由于 ELF 文件的布局方式因编译器而异，在 [签名程序的代码仓库](https://github.com/mrdrivingduck/linux-elf-binary-signer/tree/master/test/func) 中，保存了 GCC 编译出的 ELF 示例文件与 [Golang](https://golang.org/) 编译出的 ELF 示例文件。因此，在注入签名数据后，ELF 文件有多重可能的布局。
+
+如果 section header string table 位于 section 的中间，向其中插入内容会使布局在插入位置之后的所有 section 在文件中后移。不仅会影响到 section header table 中的数据，还需要修正 program header table。为了避免对 program header table 中的内容产生影响，程序将在文件的最底部重新创建一个 section header string table，并使 section header table 中的数据结构指向该位置；原先的 section header string table 已经无效，但不被删除。
+
+另外，如果 section header table 布局于位于任意 section 之前，在其中插入新的 section header entry 也会导致 program header table 中各 segment 的文件偏移与实际位置不一致。我们用了类似的处理方法，将原有 section header table 在文件末尾复制一份，并插入数据。如右下图所示。
+
+图中红色部分为新插入的数字签名信息及其相关的描述信息：
 
 ![&#x6CE8;&#x5165;&#x7B7E;&#x540D;&#x540E;&#x7684; ELF &#x6587;&#x4EF6;](../.gitbook/assets/elf-new-section.png)
 
-在签名程序的具体实现中，我们将 ELF 文件中的下述部分载入内存。这两部分的内存副本将用于记录和修改各个 ELF 结构在文件中的偏移变化和长度变化，并最终被写回 ELF 文件，覆盖原有内容：
+在签名程序的具体实现中，我们将 ELF 文件中的以下部分装载到内存中。这两部分的内存副本将用于记录和修改各个 ELF 结构在文件中的偏移变化和长度变化，并最终被写回 ELF 文件，覆盖原有内容：
 
 * ELF header
 * Section header table
@@ -53,7 +59,7 @@ description: >-
 
 基于上述工作，签名程序能够确定 ELF header 中记录的 section header table 偏移量 \(`e_shoff`\) 和 section header 数量 \(`e_shnum`\) 的最终值。另外，通过遍历 section header table，程序还可以确定在 `.shstrtab` 中插入新 section 名称字符串的位置，以及用于使插入位置之后所有 ELF 结构的地址对齐的填充字节个数。
 
-程序将内存中的 ELF header 副本与 section header table 副本 \(不包含新增 entry\) 中的偏移量修正后，覆盖原文件中的相同部分；然后，在计算好的文件偏移处插入准备好的数据。
+最后一步，程序将内存中的 ELF header 副本与 section header table 副本 \(不包含新增 entry\) 中的偏移量修正后，覆盖原文件中的相同部分；然后，在计算好的文件偏移处插入准备好的数据。
 
 {% hint style="info" %}
 在插入数据时，应当先处理在文件中插入位置靠后的数据。如果先处理在文件中插入位置靠前的数据，将会影响到之后插入的数据在文件中的插入偏移位置。
