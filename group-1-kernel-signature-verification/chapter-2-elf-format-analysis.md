@@ -47,7 +47,7 @@ Section header table 中并不存储每个 section 的名称。所有 section �
 
 内核在对 [二进制文件处理函数链表](chapter-1-binary-execution-procedure.md#15-dui-elf-wen-jian-jin-hang-qian-ming-yan-zheng-de-si-lu) 进行遍历时，已经读取了该文件的 [头 128 字节](chapter-1-binary-execution-procedure.md#12-nei-he-ru-he-shi-bie-bu-tong-ge-shi-de-er-jin-zhi-wen-jian)。如果该二进制文件是一个 ELF 文件，那么已读取的内容中已经包含了 ELF 文件的 ELF header。由此，首先通过 ELF header 中的 magic value 检验二进制文件是否是一个 ELF 文件；判断 ELF 文件类型是否为 `ET_EXEC` \(可执行文件\) 或 `ET_DYN` \(动态链接文件\)。
 
-其次，根据 ELF header 中指示的 section header table 的位置、条目个数、每个条目的大小，可以将 section header table 读入内存；根据 ELF header 中指示的 section header string table 的索引，以及已经读入内存的 section header table，可以将 section header string table 读入内存。
+其次，根据 ELF header 中指示的 section header table 的位置、条目个数、每个条目的大小，可以将 section header table 装载到内存；根据 ELF header 中指示的 section header string table 的索引，以及已经装入内存的 section header table，可以将 section header string table 装载到内存。
 
 ![ELF &#x6587;&#x4EF6;&#x4E2D;&#x7684;&#x7ED3;&#x6784;&#x5E03;&#x5C40;](../.gitbook/assets/elf-layout.png)
 
@@ -56,7 +56,7 @@ Section header table 中并不存储每个 section 的名称。所有 section �
 * 被签名 section `.text` 与签名信息 section `.text_sig`
 * ...
 
-在找到这两个相互对应的 section 之后，再根据 section header table 中指示的这两个 section 在文件中的偏移与长度，将这两个 section 的具体数据载入内存。
+在找到这两个相互对应的 section 之后，再根据 section header table 中指示的这两个 section 在文件中的偏移与长度，将这两个 section 的具体数据装入内存。
 
 最终，基于每对匹配的 section 数据进行签名验证。如果所有的签名验证都正确，那么 [ELF 签名验证模块](chapter-1-binary-execution-procedure.md#15-dui-elf-wen-jian-jin-hang-qian-ming-yan-zheng-de-si-lu) 会返回 `-ENOEXEC` 错误码，使内核随后调用真正的 ELF 处理模块完成相应的工作；如果签名验证错误，那么模块返回其它错误码，内核将无法继续执行这个 ELF 文件。
 

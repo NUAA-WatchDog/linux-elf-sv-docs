@@ -29,7 +29,8 @@ description: >-
 #define CORENAME_MAX_SIZE 128
 
 /*
- * This structure is used to hold the arguments that are used when loading binaries.
+ * This structure is used to hold the arguments that
+ * are used when loading binaries.
  */
 struct linux_binprm {
     char buf[BINPRM_BUF_SIZE];
