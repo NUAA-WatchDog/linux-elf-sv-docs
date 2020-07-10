@@ -53,7 +53,7 @@ Section header table 中并不存储每个 section 的名称。所有 section �
 
 同时遍历 section header table \(每个 section 的描述信息\) 和 section header string table \(每个 section 的名称\)，可以定位到与签名程序约定好的签名信息 section 与被签名 section，如：
 
-* 被签名 section `.text` 与签名信息 section `.text_sig`
+* 被签名 section `.text` 与签名数据 section `.text_sig`
 * ...
 
 在找到这两个相互对应的 section 之后，再根据 section header table 中指示的这两个 section 在文件中的偏移与长度，将这两个 section 的具体数据装入内存。

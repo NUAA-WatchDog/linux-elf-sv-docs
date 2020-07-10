@@ -44,7 +44,7 @@ description: >-
 * ELF header
 * Section header table
 
-我们为 section header table 多分配了一段 section header entry 的内存，并在最后一个空出的 entry 中为新增的数字签名 section 设置信息。程序会将签名数据插入到从文件末尾开始的第一个能被 8 整除的地址，作为新增 section 的数据。这个 **地址** 以及 **签名数据的长度** 被记录到最后一个 section header entry 对应的结构体中。在这一过程进行的同时，程序顺带计算在文件中需要插入的字节偏移位置与字节数量。
+我们为 section header table 多分配了一块 section header entry 的内存，并在最后一个空出的 entry 中为新增的 section 设置信息，该 section 用于保存签名数据。程序会将签名数据插入到从文件末尾开始的第一个能被 8 整除的地址，作为新增 section 的数据。这个 **地址** 以及 **签名数据的长度** 被记录到最后一个 section header entry 结构体中。在这一过程进行的同时，程序顺带计算在文件中需要插入的字节偏移位置与字节数量。
 
 {% hint style="info" %}
 这里阐明文章中 **插入** 和 **覆盖** 的概念。对于普通的文件写入，可被理解为从文件中的某个偏移位置开始 **覆盖** 文件中的原有内容，\(如果覆盖内容没有超出文件原有长度\) 将不会改变文件的长度。而插入特指 **将插入位置之后的原有内容向后挤**，从而一定会引发文件长度的变化。
