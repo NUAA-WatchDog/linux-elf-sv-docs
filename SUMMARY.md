@@ -5,7 +5,7 @@
 * [背景](background.md)
 * [运行环境与依赖](environment-and-dependencies.md)
 
-## 第一部分 - 内核 ELF 签名验证模块 <a id="group-1-kernel-signature-verification"></a>
+## 第一部分 - ELF 数字签名验证内核模块 <a id="group-1-kernel-signature-verification"></a>
 
 * [Chapter 1 - 二进制文件执行过程](group-1-kernel-signature-verification/chapter-1-binary-execution-procedure.md)
 * [Chapter 2 - ELF 文件格式分析](group-1-kernel-signature-verification/chapter-2-elf-format-analysis.md)
