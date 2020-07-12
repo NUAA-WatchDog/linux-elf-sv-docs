@@ -87,8 +87,6 @@ Section Headers:
 
 ## 5.3 参考资料
 
-[A tutorial introduction to _libelf_](https://sourceforge.net/projects/elftoolchain/files/Documentation/libelf-by-example/20120308/libelf-by-example.pdf/download)\_\_
-
 [Adding section to ELF file](https://stackoverflow.com/questions/1088128/adding-section-to-elf-file)
 
 [ELF format manipulation](https://stackoverflow.com/questions/7601344/elf-format-manipulation)
