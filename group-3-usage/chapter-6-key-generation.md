@@ -55,14 +55,16 @@ writing new private key to 'kernel_key.pem'
 该文件可以作为 ELF 签名程序的输入 \(签名需要私钥和 X.509 格式的公钥证书\)，同时也是编译内核时 `CONFIG_SYSTEM_TRUSTED_KEYS` 选项指向的文件。
 
 {% hint style="info" %}
-我们在 [**内核源代码仓库**](https://github.com/mrdrivingduck/linux-kernel-elf-sig-verify) 与 [**签名程序代码仓库**](https://github.com/mrdrivingduck/linux-elf-binary-signer) 放置了同一个 PEM 文件，其中的公私钥仅用于测试，请不要在生产环境中直接使用。[暴露私钥会导致所有的机制失效](https://www.kernel.org/doc/html/v4.15/admin-guide/module-signing.html#administering-protecting-the-private-key)。
+我们在 [签名验证内核模块代码仓库](https://github.com/mrdrivingduck/linux-kernel-elf-sig-verify-module) 与 [签名程序代码仓库](https://github.com/mrdrivingduck/linux-elf-binary-signer) 中的 `certs/` 目录下放置了同一个 PEM 文件，其中的公私钥仅用于测试，请不要在生产环境中直接使用。[暴露私钥会导致所有的机制失效](https://www.kernel.org/doc/html/v4.15/admin-guide/module-signing.html#administering-protecting-the-private-key)。
+
+可自行修改上述 `openssl` 命令参数，将 RSA 私钥与公钥证书保存到不同的文件中。编译内核时，只需要用到公钥证书；对 ELF 文件签名时，同时需要私钥和公钥证书。
 {% endhint %}
 
 ## 6.3 Let's Encrypt 密钥与证书
 
-[Let's Encrypt](https://letsencrypt.org/) 是一个由非营利性组织 - 互联网安全研究小组 \(ISRG\) 提供的免费、自动化和开放的证书颁发机构 \(CA\)，能够为网站提供免费的 [SSL/TLS](https://en.wikipedia.org/wiki/Transport_Layer_Security) 数字证书，以促进 Web 的安全化发展。要从 Let’s Encrypt 获取网站域名的证书，用户必须证明对域名的实际控制权，并在 Web 主机上运行使用 ACME 协议的软件来获取 Let’s Encrypt 证书。
+[Let's Encrypt](https://letsencrypt.org/) 是一个由非营利性组织 - 互联网安全研究小组 \(ISRG\) 提供的免费、自动化和开放的证书颁发机构 \(CA\)，能够为网站提供免费的 [SSL/TLS](https://en.wikipedia.org/wiki/Transport_Layer_Security) 数字证书，以促进 Web 的安全化发展。要从 Let’s Encrypt 获取网站域名的证书，用户必须 **证明对域名的实际控制权**，并在 Web 主机上运行使用 **ACME 协议** 的软件来获取 Let’s Encrypt 证书。
 
-Let's Encrypt 官方推荐的证书签发工具是 [Certbot](https://certbot.eff.org/)。只需要满足以下三个要求，该工具就能自动为用户生成三个月后过期的数字公钥证书与私钥，并配置一个 cron 定时任务在证书过期前自动刷新证书：
+Let's Encrypt 官方推荐的证书签发工具是 [Certbot](https://certbot.eff.org/)。只需要满足以下三个要求，该工具就能自动为用户生成有效期为三个月的数字公钥证书与私钥，并配置一个 [cron](https://baike.baidu.com/item/crontab/8819388?fr=aladdin) 定时任务在证书过期前自动刷新证书：
 
 1. 一台开放 `80` 端口的服务器
 2. 一个合法域名，且已被 [DNS](https://en.wikipedia.org/wiki/Domain_Name_System) 解析到该服务器

@@ -6,7 +6,7 @@ description: 在内核启动后，手动挂载 ELF 签名验证模块。
 
 ## 8.1 编译模块
 
-在 [模块源代码仓库](https://github.com/mrdrivingduck/linux-kernel-elf-sig-verify-module) 中，我们提供了 `Makefile` 用于编译该模块。编译模块时，需要使用到相对应的内核源代码目录。`Makefile` 中默认使用 **系统当前内核** 的源码路径 \(当然也可以指定其它的内核源码路径\)。
+在 [模块源代码仓库](https://github.com/mrdrivingduck/linux-kernel-elf-sig-verify-module) 中，我们提供了 `Makefile` 用于编译该模块。编译模块时，需要使用到相对应的内核源代码目录。`Makefile` 中默认使用 **当前正在运行的内核** 的源码路径 \(当然也可以指定其它的内核源码路径\)。
 
 ```bash
 $ make

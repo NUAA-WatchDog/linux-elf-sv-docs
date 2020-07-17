@@ -24,10 +24,10 @@ ELF 签名程序所带来的开销主要来自于：
 
 这里主要关注签名数据作为新的 section 被加入原 ELF 文件后，会使 ELF 文件大小增加多少。
 
-上面已经提到，由于对一个 section 计算出的摘要是一个 **定长** 序列，那么计算得到的数字签名也是定长的。以 SHA-256 和 RSA-2048 作为签名工具链，我们测试得到每个被签名保护的 section 会为 ELF 文件带来 560 字节左右的额外开销，包含了：
+上面已经提到，由于对一个 section 计算出的摘要是一个 **定长** 序列，那么计算得到的数字签名也是定长的。以 SHA-256 和 RSA-2048 作为签名工具链，我们测试得到每个被签名保护的 section 会为 ELF 文件带来 560 字节左右的额外开销，其中包含：
 
 * 签名数据
-* Section header table 中新的 section 项
+* Section header table 中新的 section header 项
 * Section header string table 中该 section 的名称字符串
 
 对于现代计算机的硬件来说，这个空间开销基本上可以忽略。规模越大的 ELF 文件，这个开销所占的百分比越小。以 [chromium](http://www.chromium.org/) 的 ELF 文件为例 \(`/usr/lib/chromium/chromium`\)，签名前的程序大小为 134147808 字节 \(127.9333 MB\)，签名后的程序大小为 134148352 字节 \(127.9338 MB\)，产生的额外开销为 544 字节 \(0.0004%\)。
