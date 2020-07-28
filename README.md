@@ -31,7 +31,7 @@
 
 代码仓库地址：
 
-* ELF 二进制文件签名程序：[https://github.com/mrdrivingduck/linux-elf-binary-signer](https://github.com/mrdrivingduck/linux-elf-binary-signer)
+* [ELF 二进制文件签名程序](https://github.com/mrdrivingduck/linux-elf-binary-signer)
 
 ### ELF 文件数据完整性验证内核模块
 
@@ -46,6 +46,6 @@
 
 代码仓库地址：
 
-* 内核源码树 \(基于 Linux kernel 4.15.0 release\)：[https://github.com/mrdrivingduck/linux-kernel-elf-sig-verify](https://github.com/mrdrivingduck/linux-kernel-elf-sig-verify)
-* 可动态装载的独立模块：[https://github.com/mrdrivingduck/linux-kernel-elf-sig-verify-module](https://github.com/mrdrivingduck/linux-kernel-elf-sig-verify-module)
+* [内核源码树](https://github.com/mrdrivingduck/linux-kernel-elf-sig-verify) \(Linux kernel 4.15.0 release\)
+* [可动态装载的 ELF 数字签名验证内核模块](https://github.com/mrdrivingduck/linux-kernel-elf-sig-verify-module)
 

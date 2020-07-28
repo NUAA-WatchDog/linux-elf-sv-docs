@@ -1,7 +1,7 @@
 # Table of contents
 
 * [Linux ELF 文件数据完整性保护系统](README.md)
-* [System for protecting integrity of ELF files in Linux](solution-for-protecting-integrity-of-elf-files.md)
+* [Solution for protecting integrity of ELF files on Linux](solution-for-protecting-integrity-of-elf-files.md)
 * [背景](background.md)
 * [运行环境与依赖](environment-and-dependencies.md)
 

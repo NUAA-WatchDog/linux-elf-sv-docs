@@ -2,7 +2,7 @@
 description: English version introduction.
 ---
 
-# System for protecting integrity of ELF files in Linux
+# Solution for protecting integrity of ELF files on Linux
 
 ## Author
 
@@ -12,7 +12,7 @@ H. Zong \([@zonghuaxiansheng](https://github.com/zonghuaxiansheng)\), University
 
 ## Introduction
 
-The solution aims at protecting the integrity of ELF files with modern cryptography techniques, designed for operating systems based on Linux kernel under \(but not limited to\) Intel® x86 architecture. The solution consists of two parts:
+The solution aims at protecting integrity of ELF files with modern cryptography techniques, designed for operating systems based on Linux kernel under \(but not limited to\) Intel® x86 architecture. The solution consists of two parts:
 
 1. An ELF signing program based on message digest and asymmetric encryption algorithm, in user space
 2. A kernel module for verifying signature of ELF files based on Linux key retention service, in kernel space
@@ -35,11 +35,11 @@ The attachment of digital signature should not break the format of the original 
 
 Repository:
 
-* ELF binary signer: [https://github.com/mrdrivingduck/linux-elf-binary-signer](https://github.com/mrdrivingduck/linux-elf-binary-signer)
+* [ELF Binary Signer](https://github.com/mrdrivingduck/linux-elf-binary-signer)
 
-### Mechanism for verifying integrity of ELF file in kernel
+### Mechanism for verifying integrity of ELF file inside the kernel
 
-When the OS executes an ELF file, the kernel will firstly load the ELF file into memory, parse and extract the information under protection \(instructions, data\) and corresponding digital signatures. Then, the kernel will compute the message digest, decrypt the signature with kernel-trusted public key, and compare the decryped signature to the digest. If they are exactly the same, it means the ELF file is not tampered, the kernel will move on to the preparation for execution; if they are different from each other, it means the ELF file is tampered, the kernel will refuse to run this ELF file, for the sake of security.
+When the OS executes an ELF file, the kernel will firstly load the ELF file into memory, parse and extract the information under protection \(instructions, data\) and corresponding digital signatures. Then, the kernel will compute the message digest, decrypt the signature with kernel-trusted public key, and compare the plain-text signature to the digest. If they are exactly the same, it means the ELF file is not tampered, the kernel will move on to the preparation for execution; if they are different from each other, it means the ELF file is tampered, the kernel will refuse to run this ELF file, for the sake of security.
 
 {% hint style="info" %}
 The above-mentioned actions done by the kernel are completely transparent to users. After inputting the command to run an ELF file, the user doesn't need to perform any more actions. The final execution result should only be one of the following:
@@ -50,6 +50,6 @@ The above-mentioned actions done by the kernel are completely transparent to use
 
 Repository:
 
-* The kernel source tree \(based on Linux kernel 4.15.0 release\): [https://github.com/mrdrivingduck/linux-kernel-elf-sig-verify](https://github.com/mrdrivingduck/linux-kernel-elf-sig-verify)
-* The loadable standalone kernel module: [https://github.com/mrdrivingduck/linux-kernel-elf-sig-verify-module](https://github.com/mrdrivingduck/linux-kernel-elf-sig-verify-module)
+* [The kernel source tree](https://github.com/mrdrivingduck/linux-kernel-elf-sig-verify) \(Linux kernel 4.15.0 release\): 
+* [Loadable standalone kernel module for ELF file verification](https://github.com/mrdrivingduck/linux-kernel-elf-sig-verify-module)
 
