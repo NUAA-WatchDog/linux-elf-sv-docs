@@ -2,7 +2,7 @@
 
 ## 12.1 目的
 
-ELF 文件的布局因编译器不同而大相径庭。由于签名程序需要对 ELF 文件中的结构进行调整，因此应当适配不同的 ELF 文件布局。在签名程序代码仓库的 `test/func/` [目录](https://github.com/mrdrivingduck/linux-elf-binary-signer/tree/master/test/func)下，我们试图收集布局尽可能不同的合法 ELF 文件，用于测试签名程序 `elf-sign` 的健壮性。
+ELF 文件的布局因编译器不同而大相径庭。由于签名程序需要对 ELF 文件中的结构进行调整，因此应当适配不同的 ELF 文件布局。在签名程序代码仓库的 `test/func/` [目录](https://github.com/NUAA-WatchDog/linux-elf-binary-signer/tree/master/test/func)下，我们试图收集布局尽可能不同的合法 ELF 文件，用于测试签名程序 `elf-sign` 的健壮性。
 
 ## 12.2 ELF by GCC
 

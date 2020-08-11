@@ -12,7 +12,7 @@ description: 使用 ELF 文件签名程序，对一个未被签名的 ELF 文件
 $ sudo apt install libssl-dev
 ```
 
-在 GitHub 上克隆 [ELF 文件签名程序](https://github.com/mrdrivingduck/linux-elf-binary-signer) 的代码仓库，通过 `make` 命令自动编译、构建签名程序，并对构建出的签名程序本身进行签名：
+在 GitHub 上克隆 [ELF 文件签名程序](https://github.com/NUAA-WatchDog/linux-elf-binary-signer) 的代码仓库，通过 `make` 命令自动编译、构建签名程序，并对构建出的签名程序本身进行签名：
 
 ```bash
 $ make

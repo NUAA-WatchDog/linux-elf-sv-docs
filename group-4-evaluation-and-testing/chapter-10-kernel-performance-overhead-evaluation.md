@@ -62,7 +62,7 @@ description: 评估在内核中引入了签名验证机制后所带来的各类�
 | umount | 106.101 | 503.504 | 4.7455 |
 | uname | 94.898 | 579.819 | 6.1099 |
 
-测试脚本与结果位于 [签名程序的代码仓库](https://github.com/mrdrivingduck/linux-elf-binary-signer/tree/master/test/prev) 中。
+测试脚本与结果位于 [签名程序的代码仓库](https://github.com/NUAA-WatchDog/linux-elf-binary-signer/tree/master/test/prev) 中。
 
 我们对测试结果进行了分析与解读：
 

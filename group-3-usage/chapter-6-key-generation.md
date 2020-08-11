@@ -55,7 +55,7 @@ writing new private key to 'kernel_key.pem'
 该文件可以作为 ELF 签名程序的输入 \(签名需要私钥和 X.509 格式的公钥证书\)，同时也是编译内核时 `CONFIG_SYSTEM_TRUSTED_KEYS` 选项指向的文件。
 
 {% hint style="info" %}
-我们在 [签名验证内核模块代码仓库](https://github.com/mrdrivingduck/linux-kernel-elf-sig-verify-module) 与 [签名程序代码仓库](https://github.com/mrdrivingduck/linux-elf-binary-signer) 中的 `certs/` 目录下放置了同一个 PEM 文件，其中的公私钥仅用于测试，请不要在生产环境中直接使用。[暴露私钥会导致所有的机制失效](https://www.kernel.org/doc/html/v4.15/admin-guide/module-signing.html#administering-protecting-the-private-key)。
+我们在 [签名验证内核模块代码仓库](https://github.com/NUAA-WatchDog/linux-kernel-elf-sig-verify-module) 与 [签名程序代码仓库](https://github.com/NUAA-WatchDog/linux-elf-binary-signer) 中的 `certs/` 目录下放置了同一个 PEM 文件，其中的公私钥仅用于测试，请不要在生产环境中直接使用。[暴露私钥会导致所有的机制失效](https://www.kernel.org/doc/html/v4.15/admin-guide/module-signing.html#administering-protecting-the-private-key)。
 
 可自行修改上述 `openssl` 命令参数，将 RSA 私钥与公钥证书保存到不同的文件中。编译内核时，只需要用到公钥证书；对 ELF 文件签名时，同时需要私钥和公钥证书。
 {% endhint %}
