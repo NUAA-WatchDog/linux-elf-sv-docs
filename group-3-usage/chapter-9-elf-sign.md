@@ -137,5 +137,5 @@ $ ./elf-sign sha256 \
 
 ## 9.4 参考资料
 
-[Manually signing modules](https://www.kernel.org/doc/html/latest/admin-guide/module-signing.html#manually-signing-modules)
+[The Linux Kernel - Manually signing modules](https://www.kernel.org/doc/html/latest/admin-guide/module-signing.html#manually-signing-modules)
 

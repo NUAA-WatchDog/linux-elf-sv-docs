@@ -71,5 +71,7 @@ $ sudo make install
 
 ## 7.3 参考资料
 
-[Public keys in the kernel](https://www.kernel.org/doc/html/v4.15/admin-guide/module-signing.html#public-keys-in-the-kernel)
+[The Linux Kernel - Public keys in the kernel](https://www.kernel.org/doc/html/v4.15/admin-guide/module-signing.html#public-keys-in-the-kernel)
+
+[StackExchange - How to add a public key into system keyring for kernel without recompile?](https://unix.stackexchange.com/questions/445772/how-to-add-a-public-key-into-system-keyring-for-kernel-without-recompile)
 

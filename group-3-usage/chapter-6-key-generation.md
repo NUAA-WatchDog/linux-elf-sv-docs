@@ -74,13 +74,13 @@ Let's Encrypt 官方推荐的证书签发工具是 [Certbot](https://certbot.eff
 
 ## 6.4 参考资料
 
-[OpenSSL 命令 - req](https://www.iteye.com/blog/ctwen-2028630)
+[ITeye - OpenSSL 命令 - req](https://www.iteye.com/blog/ctwen-2028630)
 
-[Generating signing keys](https://www.kernel.org/doc/html/v4.15/admin-guide/module-signing.html#generating-signing-keys)
+[The Linux Kernel - Generating signing keys](https://www.kernel.org/doc/html/v4.15/admin-guide/module-signing.html#generating-signing-keys)
 
-[Administering/protecting the private key](https://www.kernel.org/doc/html/v4.15/admin-guide/module-signing.html#administering-protecting-the-private-key)
+[The Linux Kernel - Administering/protecting the private key](https://www.kernel.org/doc/html/v4.15/admin-guide/module-signing.html#administering-protecting-the-private-key)
 
-[About Certbot](https://certbot.eff.org/about/)
+[Certbot - About Certbot](https://certbot.eff.org/about/)
 
 [GitHub - certbot](https://github.com/certbot/certbot)
 

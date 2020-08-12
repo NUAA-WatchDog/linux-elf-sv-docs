@@ -43,9 +43,9 @@ config SYSTEM_TRUSTED_KEYS
 ```
 {% endcode %}
 
-在内核启动之后，也可以通过 keyctl 系统调用向内核中动态添加新的公钥。但内核只允许 X.509 封装信息已经被 `.system_keyring` 中已有密钥进行合法签名后的新密钥加入系统密钥环。
+在内核启动之后，也可以通过 `keyctl` 系统调用向内核中动态添加新的公钥。但内核只允许 X.509 封装信息已经被位于 `.system_keyring` 中的密钥进行合法签名后的新密钥加入系统密钥环。
 
-我们为 ELF 的签名与验证生成了一对 [RSA](https://en.wikipedia.org/wiki/RSA_%28cryptosystem%29) 公私钥，将公私钥以符合 X.509 标准的方式导入到一个 PEM 编码的证书中。并通过上述机制，将证书编译进内核的系统密钥环上。这样，在 [ELF 签名验证模块](chapter-1-binary-execution-procedure.md#15-dui-elf-wen-jian-jin-hang-qian-ming-yan-zheng-de-si-lu) 中，可以通过使用系统密钥环中的公钥，对 ELF 文件中的签名信息进行验证。
+我们为 ELF 的签名与验证生成了一对 [RSA](https://en.wikipedia.org/wiki/RSA_%28cryptosystem%29) 公私钥，将公私钥以符合 X.509 标准的方式导入到一个 PEM 编码的文件中。通过上述机制，可以将文件中的公钥证书编译到内核的系统密钥环上。这样，在 [ELF 签名验证模块](chapter-1-binary-execution-procedure.md#15-dui-elf-wen-jian-jin-hang-qian-ming-yan-zheng-de-si-lu) 中，可以通过使用系统密钥环中的公钥证书，对 ELF 文件中的签名信息进行验证。
 
 ## 3.2 访问系统内置密钥进行签名验证
 
@@ -94,5 +94,7 @@ int verify_pkcs7_signature(const void *data, size_t len,
 
 [The Linux Kernel - Kernel module signing facility](https://www.kernel.org/doc/html/v4.15/admin-guide/module-signing.html)
 
-[Signature verification of kernel module and kexec](https://www.slideshare.net/joeylikernel/signature-verification-of-kernel-module-and-kexec)
+[Slide Share - ignature verification of kernel module and kexec](https://www.slideshare.net/joeylikernel/signature-verification-of-kernel-module-and-kexec)
+
+[StackExchange - How to add a public key into system keyring for kernel without recompile?](https://unix.stackexchange.com/questions/445772/how-to-add-a-public-key-into-system-keyring-for-kernel-without-recompile)
 

@@ -151,15 +151,15 @@ ELF 文件签名程序需要使用 OpenSSL [libcrypto](https://wiki.openssl.org/
 
 [Wikipedia - Digital signature](https://en.wikipedia.org/wiki/Digital_signature)
 
-[What Is a Digital Signature?](https://www.instantssl.com/digital-signature)
+[InstantSSL - What Is a Digital Signature?](https://www.instantssl.com/digital-signature)
 
-[Introduction to Digital Signatures and PKCS \#7](https://www.cryptomathic.com/news-events/blog/introduction-to-digital-signatures-and-pkcs-7)
+[CRYPTOMAThIC - Introduction to Digital Signatures and PKCS \#7](https://www.cryptomathic.com/news-events/blog/introduction-to-digital-signatures-and-pkcs-7)
 
 [PKCS\#7 - SignedData](http://www.pkiglobe.org/pkcs7.html)
 
-[OpenSSL 之 BIO 系列之15 --- 内存 \(mem\) 类型 BIO](https://blog.csdn.net/fryingpan/article/details/40374813)
+[CSDN - OpenSSL 之 BIO 系列之15 --- 内存 \(mem\) 类型 BIO](https://blog.csdn.net/fryingpan/article/details/40374813)
 
-[OpenSSL 中文手册之 BIO 库详解](https://blog.csdn.net/liao20081228/article/details/77193729)
+[CSDN - OpenSSL 中文手册之 BIO 库详解](https://blog.csdn.net/liao20081228/article/details/77193729)
 
 [OpenSSL Wiki - Main Page](https://wiki.openssl.org/index.php/Main_Page)
 

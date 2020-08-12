@@ -62,5 +62,5 @@ Section header table 中并不存储每个 section 的名称。所有 section �
 
 ## 2.4 参考资料
 
-[Executable and Linking Format \(ELF\) Specification](http://www.skyfree.org/linux/references/ELF_Format.pdf)
+[PDF - Executable and Linking Format \(ELF\) Specification](http://www.skyfree.org/linux/references/ELF_Format.pdf)
 

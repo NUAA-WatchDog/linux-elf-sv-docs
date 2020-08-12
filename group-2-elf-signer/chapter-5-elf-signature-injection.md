@@ -87,9 +87,9 @@ Section Headers:
 
 ## 5.3 参考资料
 
-[Adding section to ELF file](https://stackoverflow.com/questions/1088128/adding-section-to-elf-file)
+[Stackoverflow - Adding section to ELF file](https://stackoverflow.com/questions/1088128/adding-section-to-elf-file)
 
-[ELF format manipulation](https://stackoverflow.com/questions/7601344/elf-format-manipulation)
+[Stackoverflow - ELF format manipulation](https://stackoverflow.com/questions/7601344/elf-format-manipulation)
 
-[How to remove a specific ELF section, without stripping other symbols?](https://stackoverflow.com/questions/31453859/how-to-remove-a-specific-elf-section-without-stripping-other-symbols)
+[Stackoverflow - How to remove a specific ELF section, without stripping other symbols?](https://stackoverflow.com/questions/31453859/how-to-remove-a-specific-elf-section-without-stripping-other-symbols)
 
