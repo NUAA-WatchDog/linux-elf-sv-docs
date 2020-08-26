@@ -60,6 +60,26 @@ writing new private key to 'kernel_key.pem'
 可自行修改上述 `openssl` 命令参数，将 RSA 私钥与公钥证书保存到不同的文件中。编译内核时，只需要用到公钥证书；对 ELF 文件签名时，同时需要私钥和公钥证书。
 {% endhint %}
 
+通过以下命令可以查看 `kernel_key.pem` 中的 **公钥证书** 信息：
+
+```bash
+$ openssl x509 -in kernel_key.pem -noout -text
+```
+
+通过以下命令可以导出 `kernel_key.pem` 中的 **私钥**：
+
+```bash
+$ openssl rsa -in kernel_key.pem -text > private.pem
+writing RSA key
+```
+
+进入 OpenSSL 命令行后可以分别查看 `kernel_key.pem` 中的公钥和私钥：
+
+```bash
+$ openssl
+OpenSSL> rsa -in kernel_key.pem -text
+```
+
 ## 6.3 Let's Encrypt 密钥与证书
 
 [Let's Encrypt](https://letsencrypt.org/) 是一个由非营利性组织 - 互联网安全研究小组 \(ISRG\) 提供的免费、自动化和开放的证书颁发机构 \(CA\)，能够为网站提供免费的 [SSL/TLS](https://en.wikipedia.org/wiki/Transport_Layer_Security) 数字证书，以促进 Web 的安全化发展。要从 Let’s Encrypt 获取网站域名的证书，用户必须 **证明对域名的实际控制权**，并在 Web 主机上运行使用 **ACME 协议** 的软件来获取 Let’s Encrypt 证书。
