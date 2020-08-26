@@ -49,3 +49,12 @@
 * [内核源码树](https://github.com/NUAA-WatchDog/linux-kernel-elf-sig-verify) \(Linux kernel 4.15.0 release\)
 * [可动态装载的 ELF 数字签名验证内核模块](https://github.com/NUAA-WatchDog/linux-kernel-elf-sig-verify-module)
 
+### 设计原理与文档
+
+当前文档由 [GitHub](https://github.com/) + [GitBook](https://www.gitbook.com/) 共同管理。
+
+代码仓库地址：
+
+* [在线文档](https://app.gitbook.com/@mrdrivingduck/s/linux-elf-sv/)
+* [文档仓库](https://github.com/NUAA-WatchDog/linux-elf-sv-docs)
+

@@ -6,7 +6,7 @@ description: 通过对 ELF 文件的格式进行分析，内核中的 ELF 签名
 
 ## 2.1 关于 ELF 格式
 
-**可执行与可链接格式** \(Executable and Linkable Format, ELF\) 是一种可执行文件、目标代码、共享库、核心转储文件的通用标准文件格式。ELF 标准最早发布于一个名为 System V Release 4 \(SVR4\) 的 Unix 操作系统版本的应用二进制接口 \(Application Binary Interface, ABI\) 标准规范中，并迅速被各大 Unix 版本所接受。1999 年，ELF 格式被选为 Unix 或类 Unix 系统在 x86 处理器平台上的标准二进制文件格式。
+**可执行与可链接格式** \(Executable and Link-able Format, ELF\) 是一种可执行文件、目标代码、共享库、核心转储文件的通用标准文件格式。ELF 标准最早发布于一个名为 System V Release 4 \(SVR4\) 的 Unix 操作系统版本的应用二进制接口 \(Application Binary Interface, ABI\) 标准规范中，并迅速被各大 Unix 版本所接受。1999 年，ELF 格式被选为 Unix 或类 Unix 系统在 x86 处理器平台上的标准二进制文件格式。
 
 在设计上，ELF 格式具有 **灵活、可扩展、跨平台** 的特点。比如，其支持不同的字节顺序 \(大小端\)、不同的地址空间 \(32/64\)、不排斥任何特定的 CPU 或指令集体系结构 \(Instruction Set Architecture, ISA\)。因此，ELF 格式能够在很多不同硬件平台的不同操作系统上运行。
 
@@ -60,7 +60,43 @@ Section header table 中并不存储每个 section 的名称。所有 section �
 
 最终，基于每对匹配的 section 数据进行签名验证。如果所有的签名验证都正确，那么 [ELF 签名验证模块](chapter-1-binary-execution-procedure.md#15-dui-elf-wen-jian-jin-hang-qian-ming-yan-zheng-de-si-lu) 会返回 `-ENOEXEC` 错误码，使内核随后调用真正的 ELF 处理模块完成相应的工作；如果签名验证错误，那么模块返回其它错误码，内核将无法继续执行这个 ELF 文件。
 
-## 2.4 参考资料
+## 2.4 验证 ELF 的动态链接依赖
+
+一个 ELF 可执行文件中还包含了其依赖的 **共享对象** \(动态链接库\) 的信息。其中：
+
+* `.interp` section 指明了该文件使用的动态链接器的位置
+* `.dynstr` section 存放了所有动态链接信息中需要用到的字符串
+* `.dynamic` section 存放了所有动态链接相关的信息
+
+其中，`.dynamic` section 是以结构体数组的形式存在的，结构体定义如下：
+
+```c
+typedef struct
+{
+  Elf64_Sxword	d_tag;			/* Dynamic entry type */
+  union
+    {
+      Elf64_Xword d_val;		/* Integer value */
+      Elf64_Addr d_ptr;			/* Address value */
+    } d_un;
+} Elf64_Dyn;
+```
+
+`d_tag` 指明结构体自身的类型，并决定了 `d_un` 的用途与含义。这里我们只关注 `d_tag` 为 `DT_NEEDED` 的结构体元素。此时，`d_un` 中有效的元素是 `d_val`，含义是 `.dynstr` 字符串表中的偏移，也就是所依赖的共享对象名称。在完成 ELF 文件本身的数字签名验证工作后，程序还将提取上述信息，依次验证 ELF 依赖的每一个共享对象中的数字签名。如果 ELF 依赖的某个共享对象没有附带数字签名，或数字签名被篡改，内核将拒绝执行这个 ELF 文件。
+
+通过提取 ELF 文件中的信息，内核只能获得共享对象的名称 \(如 `libcrypto.so.1.1`\)，还无法定位到共享对象的确切位置，因此无法打开共享对象文件并验证数字签名。这里我们实现了 **动态链接器** 的部分功能，到 `/etc/ld.so.cache` 中查找共享对象所在的绝对路径。这个文件由特定的格式组织，我们自行实现了解析格式的代码。当然，共享对象的相对位置还可以通过 **环境变量** 等途径指定，这部分我们暂未实现。在获得共享对象的绝对路径后 \(如 `/usr/lib/x86_64-linux-gnu/libcrypto.so.1.1`\)，内核就可以打开这个共享对象文件，并像上述 [验证 ELF 文件数字签名](chapter-2-elf-format-analysis.md#23-nei-he-cong-elf-zhong-qu-de-shu-zi-qian-ming-de-bu-zhou) 那样，验证共享对象中的数字签名 - 因为共享对象也遵循 ELF 格式标准。
+
+{% hint style="info" %}
+我们认为，如果引入对动态链接库的数字签名验证机制，虽然更加安全，但有悖于动态链接的设计初衷，因此可能存在一些性能问题。
+{% endhint %}
+
+## 2.5 参考资料
 
 [PDF - Executable and Linking Format \(ELF\) Specification](http://www.skyfree.org/linux/references/ELF_Format.pdf)
+
+[Stackoverflow - Read/write files within a Linux kernel module](https://stackoverflow.com/questions/1184274/read-write-files-within-a-linux-kernel-module)
+
+[LD\_LIBRARY\_PATH 和 /etc/ld.so.cache 文件](http://blog.chinaunix.net/uid-25304914-id-3046279.html)
+
+[Apache JIRA - Add utility for parsing ld.so.cache on linux](https://issues.apache.org/jira/browse/MESOS-5399)
 

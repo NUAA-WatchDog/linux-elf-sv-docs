@@ -48,8 +48,17 @@ The above-mentioned actions done by the kernel are completely transparent to use
 2. The kernel refuses to execute an ELF file, and shows the reason of the error.
 {% endhint %}
 
-Repository:
+Repositories:
 
 * [The kernel source tree](https://github.com/NUAA-WatchDog/linux-kernel-elf-sig-verify) \(Linux kernel 4.15.0 release\): 
 * [Loadable standalone kernel module for ELF file verification](https://github.com/NUAA-WatchDog/linux-kernel-elf-sig-verify-module)
+
+### Design and Documentations
+
+This document is under the management of both [GitHub](https://github.com/) and [GitBook](https://www.gitbook.com/).
+
+Repositories:
+
+* [Online document on GitBook](https://app.gitbook.com/@mrdrivingduck/s/linux-elf-sv/)
+* [Document on GitHub repository](https://github.com/NUAA-WatchDog/linux-elf-sv-docs)
 

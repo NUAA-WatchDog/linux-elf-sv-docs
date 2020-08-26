@@ -85,7 +85,16 @@ Section Headers:
 
 签名程序可以指定一个被签名文件名，以及一个可选的输出文件名。如果不指定输出文件名，对于一个名为 `elf`的 ELF 文件，在签名成功后，签名程序会保留未被签名的旧版本 ELF 文件 `elf.old` 作为备份，而注入签名后的新 ELF 文件将会被命名为原先的 `elf`。具体的使用方法参见 [后续](../group-3-usage/chapter-9-elf-sign.md#82-qian-ming-cheng-xu-de-shi-yong-fang-shi)。
 
-## 5.3 参考资料
+## 5.3 提示共享对象依赖
+
+在进行签名注入时，程序还将顺带提取出 ELF 文件与动态链接相关的 sections：
+
+* `.dynstr`
+* `.dynamic`
+
+根据 [之前已经叙述过的原理](../group-1-kernel-signature-verification/chapter-2-elf-format-analysis.md#24-yan-zheng-elf-de-dong-tai-lian-jie-yi-lai)，提取其中的动态链接依赖并打印。签名工具并不会自动对这些依赖的共享对象进行数字签名，只是通过打印信息的方式提示用户，还需要对这些共享对象进行数字签名。
+
+## 5.4 参考资料
 
 [Stackoverflow - Adding section to ELF file](https://stackoverflow.com/questions/1088128/adding-section-to-elf-file)
 

@@ -18,14 +18,15 @@ $ sudo apt install libssl-dev
 $ make
 cc -o elf-sign elf_sign.c -lcrypto
 ./elf-sign.signed sha256 certs/kernel_key.pem certs/kernel_key.pem elf-sign
- --- 64-bit ELF file, version 1 (CURRENT).
- --- Little endian.
+ --- 64-bit ELF file, version 1 (CURRENT), little endian.
  --- 29 sections detected.
+ --- [Library dependency]: libcrypto.so.1.1
+ --- [Library dependency]: libc.so.6
  --- Section 0014 [.text] detected.
- --- Length of section [.text]: 9200
+ --- Length of section [.text]: 9904
  --- Signature size of [.text]: 465
  --- Writing signature to file: .text_sig
- --- Removing temp signature file: .text_sig
+ --- Removing temporary signature file: .text_sig
 ```
 
 {% hint style="info" %}
@@ -109,14 +110,13 @@ and the digest algorithm specified by <hash-algo>. If no
 $ ./elf-sign sha256 \
     certs/kernel_key.pem certs/kernel_key.pem \
     test/func/hello-golang hello-golang
- --- 64-bit ELF file, version 1 (CURRENT).
- --- Little endian.
+ --- 64-bit ELF file, version 1 (CURRENT), little endian.
  --- 23 sections detected.
  --- Section 0001 [.text] detected.
  --- Length of section [.text]: 528699
  --- Signature size of [.text]: 465
  --- Writing signature to file: .text_sig
- --- Removing temp signature file: .text_sig
+ --- Removing temporary signature file: .text_sig
 ```
 
 或将一个已有的 ELF 文件 \(`/bin/ls`\) 签名为一个自定义文件名的 ELF 文件 \(`myls`\)：
@@ -125,14 +125,15 @@ $ ./elf-sign sha256 \
 $ ./elf-sign sha256 \
     certs/kernel_key.pem certs/kernel_key.pem \
     /bin/ls myls
- --- 64-bit ELF file, version 1 (CURRENT).
- --- Little endian.
+ --- 64-bit ELF file, version 1 (CURRENT), little endian.
  --- 28 sections detected.
+ --- [Library dependency]: libselinux.so.1
+ --- [Library dependency]: libc.so.6
  --- Section 0014 [.text] detected.
  --- Length of section [.text]: 74969
  --- Signature size of [.text]: 465
  --- Writing signature to file: .text_sig
- --- Removing temp signature file: .text_sig
+ --- Removing temporary signature file: .text_sig
 ```
 
 ## 9.4 参考资料
