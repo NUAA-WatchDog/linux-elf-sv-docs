@@ -65,8 +65,8 @@ Section header table 中并不存储每个 section 的名称。所有 section �
 一个 ELF 可执行文件中还包含了其依赖的 **共享对象** \(动态链接库\) 的信息。其中：
 
 * `.interp` section 指明了该文件使用的动态链接器的位置
-* `.dynstr` section 存放了所有动态链接信息中需要用到的字符串
-* `.dynamic` section 存放了所有动态链接相关的信息
+* `.dynstr` section \(对应上图中的 **dynamic linking string table**\) 存放了所有动态链接信息中需要用到的字符串
+* `.dynamic` section \(对应上图中的 **dynamic linking table**\) 存放了所有动态链接相关的信息
 
 其中，`.dynamic` section 是以结构体数组的形式存在的，结构体定义如下：
 
