@@ -35,7 +35,7 @@ The attachment of digital signature should not break the format of the original 
 
 Repository:
 
-* [ELF Binary Signer](https://github.com/NUAA-WatchDog/linux-elf-binary-signer)
+* [ELF binary signer](https://github.com/NUAA-WatchDog/linux-elf-binary-signer)
 
 ### Mechanism for verifying integrity of ELF file inside the kernel
 
@@ -50,7 +50,7 @@ The above-mentioned actions done by the kernel are completely transparent to use
 
 Repositories:
 
-* [The kernel source tree](https://github.com/NUAA-WatchDog/linux-kernel-elf-sig-verify) \(Linux kernel 4.15.0 release\): 
+* [The kernel source tree](https://github.com/NUAA-WatchDog/linux-kernel-elf-sig-verify) \(Linux kernel 4.15.0 release\)
 * [Loadable standalone kernel module for ELF file verification](https://github.com/NUAA-WatchDog/linux-kernel-elf-sig-verify-module)
 
 ### Design and Documentations
